@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "start": "concurrently \"npm run credit\" \"npm run offre\" \"npm run service\" \"npm run user\" \"npm run gateway\" \"npm run front\"",
+    "credit": "cd micro/src/services/credit && npm start",
+    "offre": "cd micro/src/services/offre && npm start",
+    "service": "cd micro/src/services/service && npm start",
+    "user": "cd micro/src/services/user && npm start",
+    "gateway": "cd micro && npm start",
+    "front": "cd front && npm start"
+  },
+  "dependencies": {
+    "concurrently": "^8.0.1"
+  }
+}

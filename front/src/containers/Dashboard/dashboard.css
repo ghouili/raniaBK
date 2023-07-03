@@ -1,0 +1,36 @@
+.h-lefet-right {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.pt{
+    padding-top: 250px;
+}
+.h5{
+    background-color:#eaecf0; 
+}
+
+.box {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: flex-start;
+    margin-top: 15px;
+}
+
+
+.css51 {
+    color: #000000;
+    font-size: 1.1rem;
+    margin-top: 15px;
+    margin-left: 1px;
+    font-family: Poppins;
+    letter-spacing: 1.5px;
+}
+
+.css01 {
+    color : rgb(148, 192, 32);
+    font-weight: bold;
+    margin-right: 225px;
+}
+
+
