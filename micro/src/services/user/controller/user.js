@@ -6,6 +6,16 @@ const nodemailer = require("nodemailer");
 const axios = require('axios');
 const fs = require('fs');
 
+var transporter = nodemailer.createTransport({
+    // host: "smtp.mailtrap.io",
+    service: "gmail",
+    // port: 2525,
+    auth: {
+        user: "khallasli.contact@gmail.com",
+        pass: "tldaugxcpedymccf"
+    }
+});
+
 const test = async (req, res) => {
     return res.send('user controller works');
 }
@@ -450,15 +460,7 @@ const Add_PDV = async (req, res) => {
             console.error("Failed to send SMS:", error);
         });
 
-    var transporter = nodemailer.createTransport({
-        // host: "smtp.mailtrap.io",
-        service: "gmail",
-        // port: 2525,
-        auth: {
-            user: "khallasli.contact@gmail.com",
-            pass: "tldaugxcpedymccf"
-        }
-    });
+
 
     let info = await transporter.sendMail({
         from: 'khallasli.contact@gmail.com', // sender address
@@ -532,18 +534,9 @@ const Add_Finance = async (req, res) => {
         return res.status(500).json({ success: false, message: 'internal server error', data: error });
     }
 
-    var transporter = nodemailer.createTransport({
-        // host: "smtp.mailtrap.io",
-        service: "gmail",
-        // port: 2525,
-        auth: {
-            user: "sebntn.contact@gmail.com",
-            pass: "joucivcesyymsnjd"
-        }
-    });
 
     let info = await transporter.sendMail({
-        from: 'sebntn.contact@gmail.com', // sender address
+        from: 'khallasli.contact@gmail.com', // sender address
         to: email, // list of receivers
         subject: "New Account Created", // Subject line
         // text: "Hello world?", // plain text body
@@ -556,7 +549,7 @@ const Add_Finance = async (req, res) => {
             <p style="font-size: 18px; color: #3d3d3d;">Please keep your password in a safe place. You can change your password anytime by logging into your account.</p>
             <p style="font-size: 18px; color: #3d3d3d;">Here is your password: <strong>${password}</strong></p>
             <div style="text-align: center; margin-top: 40px;">
-                <a href="https://www.google.com/" style="display: inline-block; background-color: #0066ff; color: white; font-size: 18px; padding: 12px 30px; text-decoration: none; border-radius: 30px;">Check out our App</a>
+                <a href="http://localhost:3000/" style="display: inline-block; background-color: #0066ff; color: white; font-size: 18px; padding: 12px 30px; text-decoration: none; border-radius: 30px;">Check out our App</a>
             </div>
             <p style="font-size: 16px; color: #666; margin-top: 40px;">Thank you for using our App!</p>
         </div>

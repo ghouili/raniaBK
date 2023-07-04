@@ -154,6 +154,7 @@ const Finances = () => {
       console.log(result);
       if (result.data.success === true) {
         fetchData();
+        ToggleDialog();
         swal("Success!", result.data.message, "success");
       } else {
         return swal("Error!", result.data.message, "error");

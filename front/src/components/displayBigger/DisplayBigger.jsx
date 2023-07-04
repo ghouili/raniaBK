@@ -29,7 +29,7 @@ const DisplayBigger = ({ file, handleOpen, open }) => {
       <Dialog size="xl" open={open} handler={() => handleOpen(null)}>
         <DialogBody divider={true} className="p-0">
           <object
-            data={`${path}uploads/images/${file}`}
+            data={`${path}user/uploads/images/${file}`}
             aria-label="nature"
             className="h-[48rem] w-full object-cover object-center"
           />

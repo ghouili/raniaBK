@@ -4,10 +4,17 @@ import { GeneralContext } from "../../Hooks/context/GeneralContext";
 const Notification = () => {
   const { alert, alertData, setAlert } = useContext(GeneralContext);
   return (
-    <div className="absolute inset-x-auto z-20" style={{maxWidth: '50vw', left: '30vw', top: '2vw' }} >
+    <div
+      className="absolute inset-x-auto z-20"
+      style={{ maxWidth: "50vw", left: "30vw", top: "2vw" }}
+    >
       {!alert ? null : (
         <div
-          className="flex w-fit p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 "
+          className={`flex w-fit p-4 mb-4 text-sm text-${
+            alertData.success ? "green" : "red"
+          }-800 border border-${
+            alertData.success ? "green" : "red"
+          }-300 rounded-lg bg-${alertData.success ? "green" : "red"}-50`}
           role="alert"
         >
           <svg
@@ -25,12 +32,23 @@ const Notification = () => {
           </svg>
           <span className="sr-only">Info</span>
           <div>
-            <span className="font-medium">Success alert!</span> Congratulation your Credit was accepted.
+            <span className="font-medium">
+              {alertData?.success ? "Success!" : "Declined"}
+            </span>{" "}
+            {alertData?.msg}
           </div>
           <button
             type="button"
-            onClick={()=> setAlert(false)}
-            className="ml-2 -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex h-8 w-8 "
+            onClick={() => setAlert(false)}
+            className={`ml-2 -mx-1.5 -my-1.5 bg-${
+              alertData.success ? "green" : "red"
+            }-50 text-${
+              alertData.success ? "green" : "red"
+            }-500 rounded-lg focus:ring-2 focus:ring-${
+              alertData.success ? "green" : "red"
+            }-400 p-1.5 hover:bg-${
+              alertData.success ? "green" : "red"
+            }-200 inline-flex h-8 w-8`}
           >
             <span className="sr-only">Dismiss</span>
             <svg

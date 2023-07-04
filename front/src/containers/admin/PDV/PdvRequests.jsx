@@ -272,7 +272,7 @@ const PdvRequests = () => {
                       <button
                         type="button"
                         className={`relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 bg-gradient-to-br  from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500`}
-                        onClick={() => ToggleLock(false, _id)}
+                        onClick={() => ToggleLock(false, _id, tel)}
                       >
                         <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                           <BsPersonDash size={18} />

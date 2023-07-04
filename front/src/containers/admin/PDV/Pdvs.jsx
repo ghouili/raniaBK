@@ -308,7 +308,7 @@ const Pdvs = () => {
     });
 
     if (willDelete) {
-      const result = await axios.post(`http://localhost:5000/user/lock/${id}`, {
+      const result = await axios.post(`http://localhost:5001/lock/${id}`, {
         lock,
       });
 
@@ -845,6 +845,7 @@ const Pdvs = () => {
           </form>
         </Dialog>
       </Fragment>
+
       {/* //display bigger files:: */}
       <Fragment>
         <DisplayBigger

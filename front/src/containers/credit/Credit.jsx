@@ -30,7 +30,7 @@ import {
   Option,
 } from "@material-tailwind/react";
 
-import { BsFileEarmarkPlus } from "react-icons/bs";
+import { BsFileEarmarkPlus, BsPhone, BsShop } from "react-icons/bs";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaCoins, FaPercent } from "react-icons/fa";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
@@ -38,6 +38,11 @@ import { path } from "../../utils/Variables";
 import InputField from "../../components/inputField/InputField";
 import swal from "sweetalert";
 import { socket } from "../../Socket";
+import { DisplayBigger } from "../../components";
+import { HiOutlineMail } from "react-icons/hi";
+import { GiModernCity } from "react-icons/gi";
+import { TfiLocationPin } from "react-icons/tfi";
+import { RxSection } from "react-icons/rx";
 
 const TABS = [
   {
@@ -59,14 +64,6 @@ const TABS = [
 ];
 
 const TABLE_HEAD = ["Pack", "PDV", "duree", "etat", "date", ""];
-
-function PMT(ir, np, pv) {
-  var pmt, pvif;
-  if (ir == 0) pmt = -pv / np;
-  pvif = Math.pow(1 + ir, np);
-  if (ir != 0) pmt = (-ir * pv * pvif) / (pvif - 1);
-  return pmt;
-}
 
 const Credit = () => {
   const cookies = new Cookies();
@@ -121,6 +118,30 @@ const Credit = () => {
   const [pdvCreditopen, setPdvCreditopen] = useState(false);
   const [displayEcheance, setDisplayEcheance] = useState(0);
 
+  const [fileDisplay, setFileDisplay] = useState(null);
+  //display bigger files::
+  const [openDisplay, setOpenDisplay] = useState(false);
+  //handel display bigger files::
+  const handleOpenDisplay = (file) => {
+    setOpenPdvDisplay(false);
+    setOpenDisplay(!openDisplay);
+    setFileDisplay(file);
+  };
+
+  const [pdvDisplay, setPdvDisplay] = useState(null);
+  //display bigger pdv::
+  const [openPdvDisplay, setOpenPdvDisplay] = useState(false);
+  //handel display bigger pdv::
+  const handleOpenPdvDisplay = async (id) => {
+    const result = await axios.get(`${path}user/${id}`);
+
+    // console.log(result.data.data);
+    setPdvDisplay(result.data.data);
+
+    setOpenPdvDisplay(!openPdvDisplay);
+  };
+
+  const handelPdvD = () => setOpenPdvDisplay(!openPdvDisplay);
   const handelPdvCreditopen = () => setPdvCreditopen(!pdvCreditopen);
 
   const handleOpenAccept = () => {
@@ -177,15 +198,20 @@ const Credit = () => {
   const fetchCredit = async (id, display) => {
     const result = await axios.get(`${path}credit/${id}`);
 
+    console.log(result.data.data);
     setCredit(result.data.data);
-    let echeance = await handleCalculatFirst(
+    let echeance = await handleCalculate(
       result.data.data.montant,
       result.data.data.interet,
       result.data.data.duree,
       result.data.data.grasse,
-      result.data.data.rembource
+      result.data.data.rembource,
+      autre,
+      fraisDoc
     );
+
     setDisplayEcheance(echeance);
+    setMontant_ech(echeance);
     if (display) {
       return handelPdvCreditopen();
     }
@@ -250,6 +276,27 @@ const Credit = () => {
     // Handle form submission
     // console.log("calculate :");
     // handleCalculate();
+    let echeance = await handleCalculate(
+      formValues.montant,
+      1.25,
+      formValues.duree,
+      formValues.grasse,
+      formValues.rembource,
+      autre,
+      fraisDoc
+    );
+
+    // console.log(echeance);
+    let values = {
+      montant: formValues.montant,
+      montant_ech: echeance,
+      duree: formValues.duree,
+      grasse: formValues.grasse,
+      rembource: formValues.rembource,
+      packid: formValues.packid,
+      offreid: formValues.offreid,
+      userid: formValues.userid,
+    };
 
     try {
       let url, result;
@@ -258,7 +305,7 @@ const Credit = () => {
         result = await axios.put(url, formValues);
       } else {
         url = `http://localhost:5004/add`;
-        result = await axios.post(url, formValues);
+        result = await axios.post(url, values);
       }
       // console.log(result);
       if (result.data.success === true) {
@@ -286,12 +333,21 @@ const Credit = () => {
     });
 
     if (willDelete) {
-      const result = await axios.put(
-        `http://localhost:5004/etat/${id}`,
-        { etat: "Refusee" }
-      );
-
+      const result = await axios.put(`http://localhost:5004/etat/${id}`, {
+        etat: "Refusee",
+      });
+      console.log(result.data);
       if (result.data.success) {
+        if (result.data.socketID) {
+          console.log(`socket  id :  ${result.data.socketID}`);
+          socket.emit("alertUser", {
+            userID: result.data.socketID,
+            data: {
+              success: false,
+              msg: "Unfortenatl Your credit was declined.",
+            },
+          });
+        }
         swal("Success!", result.data.message, "success");
         fetchData();
       } else {
@@ -310,22 +366,13 @@ const Credit = () => {
     });
 
     if (willDelete) {
-      // await handleCalculate();
-      let echeance = await handleCalculate();
-      // console.log({
-      //   interet: credit.interet,
-      //   duree: credit.duree,
-      //   grasse: credit.grasse,
-      //   montant_ech: echeance,
-      //   etat: "Acceptee",
-      // });
       const result = await axios.put(
         `http://localhost:5004/etat/${credit._id}`,
         {
           interet: credit.interet,
           duree: credit.duree,
           grasse: credit.grasse,
-          montant_ech: echeance,
+          montant_ech: displayEcheance,
           etat: "Acceptee",
         }
       );
@@ -335,12 +382,15 @@ const Credit = () => {
           console.log(`socket  id :  ${result.data.socketID}`);
           socket.emit("alertUser", {
             userID: result.data.socketID,
-            data: "Congratulation your Credit was accepted!!",
+            data: {
+              success: true,
+              msg: "Congratulation your Credit was accepted.",
+            },
           });
         }
         swal("Success!", result.data.message, "success");
-        setAutre(120);
-        setFraisDoc(7);
+        setAutre(7);
+        setFraisDoc(120);
         fetchData();
       } else {
         return swal("Error!", result.adta.message, "error");
@@ -348,43 +398,38 @@ const Credit = () => {
     }
   };
 
-  const handleCalculate = async () => {
-    let echeance =
-      (credit.montant +
-        (credit.montant * parseFloat(credit.interet)) / 100 +
-        (credit.montant * parseFloat(autre)) / 100 +
-        fraisDoc) /
-      (parseInt(credit.duree) - parseInt(credit.grasse));
-
-    console.log(Math.round(echeance));
-
-    if (parseInt(credit.rembource) === "Mensuelle") {
-      return Math.round(echeance);
-    } else {
-      return Math.round(echeance * 3);
-    }
-  };
-
-  const handleCalculatFirst = async (
+  const handleCalculate = async (
     montant,
     interet,
     duree,
     grasse,
-    rembource
+    rembource,
+    autre,
+    fraisDoc
   ) => {
-    let echeance =
-      (montant +
-        (montant * interet) / 100 +
-        (montant * autre) / 100 +
-        fraisDoc) /
-      (duree - grasse);
+    let montFrais = parseInt(montant) + parseInt(fraisDoc);
 
-    console.log(Math.round(echeance));
+    interet = (montant * parseFloat(interet)) / 100;
+    autre = (montant * parseFloat(autre)) / 100;
+    let time = duree - grasse;
+    console.log("montant: " + montant);
+    console.log("montant + frais: " + montFrais);
+    // console.log("interet: " + interet);
+    // console.log("duree: " + time);
+    // console.log("duree: " + duree);
+    // console.log("grasse: " + grasse);
+    // console.log("v rembource: " + rembource);
+    // console.log("v autre: " + autre);
+    console.log("fraisDoc: " + fraisDoc);
 
+    const echeance = (montFrais + interet + autre) / time;
+
+    const roundedEcheance = Math.round(echeance);
+    console.log(echeance);
     if (rembource === "Mensuelle") {
-      return Math.round(echeance);
+      return roundedEcheance;
     } else {
-      return Math.round(echeance * 3);
+      return roundedEcheance * 3;
     }
   };
 
@@ -493,9 +538,13 @@ const Credit = () => {
                       },
                       index
                     ) => {
-                      // if (user._id !== userid || userid !== '6464d4db624ebfd44f611142' ) {
-                      //   return null;
-                      // }
+                      console.log(
+                        "userId: " + userid + " user._id: " + user._id
+                      );
+                      // console.log('userId: ' + userid  +' user._id: ' + user._id);
+                      if (user.role === "pdv" && user._id !== userid) {
+                        return null;
+                      }
 
                       console.log(user._id);
                       let pack = packs.filter((item) => item._id === packid);
@@ -534,8 +583,9 @@ const Credit = () => {
                                 className="font-normal"
                               >
                                 <Link
-                                  to={`/offres/${packid}`}
+                                  // to={`/offres/${packid}`}
                                   className="text-blue-700 hover:text-blue-900 underline "
+                                  onClick={() => handleOpenPdvDisplay(userid)}
                                 >
                                   {pdv[0]?.name}
                                 </Link>
@@ -816,27 +866,37 @@ const Credit = () => {
                   type="number"
                   value={credit.interet}
                   onChange={async (e) => {
-                    if (typeof e.target.value === "number") {
-                      setCredit({
-                        ...credit,
-                        interet: e.target.value,
-                      });
-                    } else if (
-                      typeof e.target.value === "string" &&
-                      !isNaN(e.target.value)
-                    ) {
-                      setCredit({
-                        ...credit,
-                        interet: parseFloat(e.target.value),
-                      });
-                    } else {
-                      setCredit({
-                        ...credit,
-                        interet: 1.25,
-                      });
+                    setCredit({
+                      ...credit,
+                      interet: e.target.value,
+                    });
+                    if (e.target.value) {
+                      // } else if (
+                      //   typeof e.target.value === "string" &&
+                      //   !isNaN(e.target.value)
+                      // ) {
+                      //   setCredit({
+                      //     ...credit,
+                      //     interet: parseFloat(e.target.value),
+                      //   });
+                      // } else {
+                      //   setCredit({
+                      //     ...credit,
+                      //     interet: 1.25,
+                      //   });
+                      // }
+                      let echeance = await handleCalculate(
+                        credit.montant,
+                        e.target.value,
+                        credit.duree,
+                        credit.grasse,
+                        credit.rembource,
+                        autre,
+                        fraisDoc
+                      );
+                      console.log(echeance);
+                      setDisplayEcheance(echeance);
                     }
-                    let echeance = await handleCalculate();
-                    setDisplayEcheance(echeance);
                   }}
                 />
                 <Input
@@ -844,20 +904,29 @@ const Credit = () => {
                   type="number"
                   value={fraisDoc}
                   onChange={async (e) => {
-                    console.log(typeof e.target.value);
+                    // console.log(typeof e.target.value);
+                    setFraisDoc(e.target.value);
                     if (e.target.value) {
-                      setFraisDoc(e.target.value);
                       // } else if (
                       //   typeof e.target.value === "string" &&
                       //   e.target.value !== ''
                       // ) {
                       //   setFraisDoc(parseFloat(e.target.value));
-                    } else {
-                      setFraisDoc(0);
+                      // } else {
+                      //   setFraisDoc(0);
+                      // }
+                      let echeance = await handleCalculate(
+                        credit.montant,
+                        credit.interet,
+                        credit.duree,
+                        credit.grasse,
+                        credit.rembource,
+                        autre,
+                        e.target.value
+                      );
+                      console.log(echeance);
+                      setDisplayEcheance(echeance);
                     }
-                    setFraisDoc(e.target.value);
-                    let echeance = await handleCalculate();
-                    setDisplayEcheance(echeance);
                   }}
                 />
                 <Input
@@ -865,72 +934,66 @@ const Credit = () => {
                   value={autre}
                   type="number"
                   onChange={async (e) => {
-                    if (typeof e.target.value === "number") {
-                      setAutre(e.target.value);
-                    } else if (
-                      typeof e.target.value === "string" &&
-                      !isNaN(e.target.value)
-                    ) {
-                      setAutre(parseFloat(e.target.value));
-                    } else {
-                      setAutre(0);
+                    setAutre(e.target.value);
+                    if (e.target.value) {
+                      let echeance = await handleCalculate(
+                        credit.montant,
+                        credit.interet,
+                        credit.duree,
+                        credit.grasse,
+                        credit.rembource,
+                        e.target.value,
+                        fraisDoc
+                      );
+                      console.log(echeance);
+                      setDisplayEcheance(echeance);
                     }
-                    let echeance = await handleCalculate();
-                    setDisplayEcheance(echeance);
                   }}
                 />
                 <Input
                   label="Durree"
                   value={credit.duree}
                   onChange={async (e) => {
-                    if (typeof e.target.value === "number") {
-                      setCredit({
-                        ...credit,
-                        duree: e.target.value,
-                      });
-                    } else if (
-                      typeof e.target.value === "string" &&
-                      !isNaN(e.target.value)
-                    ) {
-                      setCredit({
-                        ...credit,
-                        duree: parseFloat(e.target.value),
-                      });
-                    } else {
-                      setCredit({
-                        ...credit,
-                        duree: 1,
-                      });
+                    setCredit({
+                      ...credit,
+                      duree: e.target.value,
+                    });
+                    if (e.target.value) {
+                      let echeance = await handleCalculate(
+                        credit.montant,
+                        credit.interet,
+                        e.target.value,
+                        credit.grasse,
+                        credit.rembource,
+                        autre,
+                        fraisDoc
+                      );
+                      console.log(echeance);
+                      setDisplayEcheance(echeance);
                     }
-                    let echeance = await handleCalculate();
-                    setDisplayEcheance(echeance);
                   }}
                 />
                 <Input
-                  label="Period Grass"
+                  label="Period Grasse"
                   value={credit.grasse}
                   onChange={async (e) => {
-                    if (typeof e.target.value === "number") {
-                      setCredit({
-                        ...credit,
-                        grasse: e.target.value,
-                      });
-                    } else if (
-                      typeof e.target.value === "string" &&
-                      !isNaN(e.target.value)
-                    ) {
-                      setCredit({
-                        ...credit,
-                        grasse: parseFloat(e.target.value),
-                      });
-                    } else {
-                      setCredit({
-                        ...credit,
-                        grasse: 0,
-                      });
+                    setCredit({
+                      ...credit,
+                      grasse: e.target.value,
+                    });
+                    if (e.target.value) {
+                      let echeance = await handleCalculate(
+                        credit.montant,
+                        credit.interet,
+                        credit.duree,
+                        e.target.value,
+                        credit.rembource,
+                        autre,
+                        fraisDoc
+                      );
+                      console.log(echeance);
+                      setDisplayEcheance(echeance);
                     }
-                    let echeance = await handleCalculate();
-                    setDisplayEcheance(echeance);
                   }}
                 />
               </div>
@@ -1004,6 +1067,91 @@ const Credit = () => {
               </div>
             </div>
           </div>
+        </Dialog>
+      </Fragment>
+
+      {/* //display bigger files:: */}
+      <Fragment>
+        <DisplayBigger
+          file={fileDisplay}
+          handleOpen={handleOpenDisplay}
+          open={openDisplay}
+        />
+      </Fragment>
+
+      {/* //display PDV:: */}
+      <Fragment>
+        <Dialog open={openPdvDisplay} handler={handelPdvD} className="p-4">
+          <div className="flex flex-col border bg-gray-100 rounded-md shadow py-4 px-2">
+            <div className="w-full flex justify-center">
+              <img
+                src={`${path}user/uploads/images/${pdvDisplay?.avatar}`}
+                alt="user Pic"
+                className="w-20 h-20 rounded-full"
+              />
+            </div>
+            <div className="flex justify-evenly items-center">
+              <div className="w-full ">
+                <div className="w-full flex justify-center gap-4 items-center text-xl font-semibold text-blue-950">
+                  <h2>{pdvDisplay?.name}</h2>
+                </div>
+                <div className="w-full flex  items-center  text-gray-700">
+                  <HiOutlineMail size={20} />
+                  <h2>{pdvDisplay?.email}</h2>
+                </div>
+                <div className="w-full flex  items-center  text-gray-700">
+                  <BsPhone size={20} />
+                  <h2>{pdvDisplay?.tel}</h2>
+                </div>
+                <div className="w-full flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <GiModernCity size={20} />
+                  <h2>{pdvDisplay?.ville}</h2>
+                </div>
+                <div className="w-full flex  items-center  text-gray-700">
+                  <TfiLocationPin size={20} />
+                  <h2>{pdvDisplay?.adress} </h2>
+                </div>
+              </div>
+              <div className="w-full flex justify-center">
+                <h1
+                  className=" cursor-pointer text-blue-700 hover:text-blue-900 underline font-semibold text-lg "
+                  onClick={() => handleOpenDisplay(pdvDisplay?.cin)}
+                >
+                  CIN
+                </h1>
+              </div>
+            </div>
+            <div className="w-full border my-2 "></div>
+
+            <div className="flex justify-evenly items-center">
+              <div className="w-full ">
+                <div className="w-full flex justify-center gap-4 items-center text-xl font-semibold text-blue-950">
+                  <h2>{pdvDisplay?.register_comm}</h2>
+                </div>
+                <div className="w-full flex  items-center  text-gray-700">
+                  <BsShop size={20} />
+                  <h2>{pdvDisplay?.shop_name}</h2>
+                </div>
+                <div className="w-full flex  items-center  text-gray-700">
+                  <RxSection size={20} />
+                  <h2>{pdvDisplay?.secter}</h2>
+                </div>
+              </div>
+              <div className="w-full flex justify-center ">
+                <h1
+                  className=" cursor-pointer text-blue-700 hover:text-blue-900 underline font-semibold text-lg "
+                  onClick={() => handleOpenDisplay(pdvDisplay?.patent)}
+                >
+                  Patent
+                </h1>
+              </div>
+            </div>
+          </div>
+          {/* <DialogFooter className="space-x-2">
+            <Button variant="outlined" color="red" onClick={handelPdvD}>
+              close
+            </Button>
+          </DialogFooter> */}
         </Dialog>
       </Fragment>
     </div>

@@ -250,84 +250,118 @@ const NCredit = () => {
     // Handle form submission
     // console.log("calculate :");
     // handleCalculate();
-    let echeance = await handleCalculate(
-      formValues.montant,
-      1.25,
-      formValues.duree,
-      formValues.grasse,
-      formValues.rembource,
-      autre,
-      fraisDoc
-    );
 
-    console.log(echeance);
-    // let values = {
-    //   montant: formValues.montant,
-    //   montant_ech: echeance,
-    //   duree: formValues.duree,
-    //   grasse: formValues.grasse,
-    //   rembource: formValues.rembource,
-    //   packid: formValues.packid,
-    //   offreid: formValues.offreid,
-    //   userid: formValues.userid,
-    // };
-
-    // try {
-    //   let url, result;
-    //   if (formValues._id) {
-    //     url = `${path}credit/${formValues._id}`;
-    //     result = await axios.put(url, formValues);
-    //   } else {
-    //     url = `http://localhost:5004/add`;
-    //     result = await axios.post(url, values);
-    //   }
-    //   // console.log(result);
-    //   if (result.data.success === true) {
-    //     fetchData();
-    //     swal("Success!", result.data.message, "success");
-    //   } else {
-    //     return swal("Error!", result.data.message, "error");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   return swal(
-    //     "Error!",
-    //     "Something went wrong. Please try again later.",
-    //     "error"
-    //   );
-    // }
+    try {
+      let url, result;
+      if (formValues._id) {
+        url = `${path}credit/${formValues._id}`;
+        result = await axios.put(url, formValues);
+      } else {
+        url = `http://localhost:5004/add`;
+        result = await axios.post(url, formValues);
+      }
+      // console.log(result);
+      if (result.data.success === true) {
+        fetchData();
+        swal("Success!", result.data.message, "success");
+      } else {
+        return swal("Error!", result.data.message, "error");
+      }
+    } catch (error) {
+      console.error(error);
+      return swal(
+        "Error!",
+        "Something went wrong. Please try again later.",
+        "error"
+      );
+    }
   };
 
-  const handleCalculate = async (
-    montant,
-    interet,
-    duree,
-    grasse,
-    rembource,
-    autre,
-    fraisDoc
-  ) => {
-    let montFrais = parseInt(montant) + parseInt(fraisDoc);
-    interet = (montant * parseFloat(interet)) / 100;
-    autre = (montant * parseFloat(autre)) / 100;
-    let time = duree - grasse;
-    console.log("montant: " + montant);
-    console.log("interet: " + interet);
-    // console.log("duree: " + time);
-    console.log("duree: " + duree);
-    console.log("grasse: " + grasse);
-    console.log("v rembource: " + rembource);
-    console.log("v autre: " + autre);
-    console.log("fraisDoc: " + fraisDoc);
+  const Refuse = async (id) => {
+    const willDelete = await swal({
+      title: "Are you sure?",
+      text: "Are you sure that you want to Refuse this credit?",
+      icon: "warning",
+      dangerMode: true,
+    });
 
-    const echeance = (montFrais + interet + autre) / time;
+    if (willDelete) {
+      const result = await axios.put(
+        `http://localhost:5004/etat/${id}`,
+        { etat: "Refusee" }
+      );
 
-    const roundedEcheance = Math.round(echeance);
-    console.log(echeance);
-    if (rembource === "Mensuelle") {
-      return roundedEcheance;
+      if (result.data.success) {
+        swal("Success!", result.data.message, "success");
+        fetchData();
+      } else {
+        return swal("Error!", result.adta.message, "error");
+      }
+    }
+  };
+
+  const Accept = async (e) => {
+    e.preventDefault();
+    const willDelete = await swal({
+      title: "Are you sure?",
+      text: "Are you sure that you want to Refuse this credit?",
+      icon: "warning",
+      dangerMode: true,
+    });
+
+    if (willDelete) {
+      // await handleCalculate();
+      let echeance = await handleCalculate();
+      // console.log({
+      //   interet: credit.interet,
+      //   duree: credit.duree,
+      //   grasse: credit.grasse,
+      //   montant_ech: echeance,
+      //   etat: "Acceptee",
+      // });
+      const result = await axios.put(
+        `http://localhost:5004/etat/${credit._id}`,
+        {
+          interet: credit.interet,
+          duree: credit.duree,
+          grasse: credit.grasse,
+          montant_ech: echeance,
+          etat: "Acceptee",
+        }
+      );
+
+      if (result.data.success) {
+        if (result.data.socketID) {
+          console.log(`socket  id :  ${result.data.socketID}`);
+          socket.emit("alertUser", {
+            userID: result.data.socketID,
+            data: "Congratulation your Credit was accepted!!",
+          });
+        }
+        swal("Success!", result.data.message, "success");
+        setAutre(120);
+        setFraisDoc(7);
+        fetchData();
+      } else {
+        return swal("Error!", result.adta.message, "error");
+      }
+    }
+  };
+
+  const handleCalculate = async () => {
+    let echeance =
+      (credit.montant +
+        (credit.montant * parseFloat(credit.interet)) / 100 +
+        (credit.montant * parseFloat(autre)) / 100 +
+        fraisDoc) /
+      (parseInt(credit.duree) - parseInt(credit.grasse));
+
+    console.log(Math.round(echeance));
+
+    if (parseInt(credit.rembource) === "Mensuelle") {
+      return Math.round(echeance);
     } else {
-      return roundedEcheance * 3;
+      return Math.round(echeance * 3);
     }
   };
 
@@ -551,7 +585,7 @@ const NCredit = () => {
                               <IconButton
                                 variant="text"
                                 color="blue"
-                                // onClick={() => fetchCredit(_id, true)}
+                                onClick={() => fetchCredit(_id, true)}
                               >
                                 <EyeIcon className="h-5 w-5 text-green-900 " />
                               </IconButton>
@@ -561,7 +595,7 @@ const NCredit = () => {
                                 <IconButton
                                   variant="text"
                                   color="red"
-                                  //   onClick={() => Refuse(_id)}
+                                  onClick={() => Refuse(_id)}
                                 >
                                   <XMarkIcon className="h-5 w-5 text-red-900" />
                                 </IconButton>
@@ -572,7 +606,7 @@ const NCredit = () => {
                                 <IconButton
                                   variant="text"
                                   color="green"
-                                  //   onClick={() => fetchCredit(_id)}
+                                  onClick={() => fetchCredit(_id)}
                                 >
                                   <CheckIcon className="h-5 w-5 text-green-900 " />
                                 </IconButton>
@@ -752,6 +786,224 @@ const NCredit = () => {
               </Button>
             </DialogFooter>
           </form>
+        </Dialog>
+      </Fragment>
+
+      <Fragment>
+        <Dialog size="lg" open={openAccept} handler={handleOpenAccept}>
+          <div className="flex items-center justify-between">
+            <DialogHeader>
+              <span className="text-center text-sm font-medium">
+                Accept this Credit
+              </span>
+              <span className="text-green-500 font-semibold">
+                {displayEcheance} Dt
+              </span>
+            </DialogHeader>
+            <XMarkIcon className="mr-3 h-5 w-5" onClick={handleOpenAccept} />
+          </div>
+          <form onSubmit={Accept}>
+            <DialogBody divider>
+              <div className="grid grid-cols-2 gap-6">
+                <Input
+                  label="Mantant demander"
+                  value={credit.montant}
+                  // onChange={(e) => setMontant_ech(e.target.value)}
+                  disabled
+                />
+                <Input
+                  label="Taux d'intret"
+                  type="number"
+                  value={credit.interet}
+                  onChange={async (e) => {
+                    if (typeof e.target.value === "number") {
+                      setCredit({
+                        ...credit,
+                        interet: e.target.value,
+                      });
+                    } else if (
+                      typeof e.target.value === "string" &&
+                      !isNaN(e.target.value)
+                    ) {
+                      setCredit({
+                        ...credit,
+                        interet: parseFloat(e.target.value),
+                      });
+                    } else {
+                      setCredit({
+                        ...credit,
+                        interet: 1.25,
+                      });
+                    }
+                    let echeance = await handleCalculate();
+                    setDisplayEcheance(echeance);
+                  }}
+                />
+                <Input
+                  label="Frais de dossier"
+                  type="number"
+                  value={fraisDoc}
+                  onChange={async (e) => {
+                    console.log(typeof e.target.value);
+                    if (e.target.value) {
+                      setFraisDoc(e.target.value);
+                      // } else if (
+                      //   typeof e.target.value === "string" &&
+                      //   e.target.value !== ''
+                      // ) {
+                      //   setFraisDoc(parseFloat(e.target.value));
+                    } else {
+                      setFraisDoc(0);
+                    }
+                    setFraisDoc(e.target.value);
+                    let echeance = await handleCalculate();
+                    setDisplayEcheance(echeance);
+                  }}
+                />
+                <Input
+                  label="Assurance"
+                  value={autre}
+                  type="number"
+                  onChange={async (e) => {
+                    if (typeof e.target.value === "number") {
+                      setAutre(e.target.value);
+                    } else if (
+                      typeof e.target.value === "string" &&
+                      !isNaN(e.target.value)
+                    ) {
+                      setAutre(parseFloat(e.target.value));
+                    } else {
+                      setAutre(0);
+                    }
+                    let echeance = await handleCalculate();
+                    setDisplayEcheance(echeance);
+                  }}
+                />
+                <Input
+                  label="Durree"
+                  value={credit.duree}
+                  onChange={async (e) => {
+                    if (typeof e.target.value === "number") {
+                      setCredit({
+                        ...credit,
+                        duree: e.target.value,
+                      });
+                    } else if (
+                      typeof e.target.value === "string" &&
+                      !isNaN(e.target.value)
+                    ) {
+                      setCredit({
+                        ...credit,
+                        duree: parseFloat(e.target.value),
+                      });
+                    } else {
+                      setCredit({
+                        ...credit,
+                        duree: 1,
+                      });
+                    }
+                    let echeance = await handleCalculate();
+                    setDisplayEcheance(echeance);
+                  }}
+                />
+                <Input
+                  label="Period Grass"
+                  value={credit.grasse}
+                  onChange={async (e) => {
+                    if (typeof e.target.value === "number") {
+                      setCredit({
+                        ...credit,
+                        grasse: e.target.value,
+                      });
+                    } else if (
+                      typeof e.target.value === "string" &&
+                      !isNaN(e.target.value)
+                    ) {
+                      setCredit({
+                        ...credit,
+                        grasse: parseFloat(e.target.value),
+                      });
+                    } else {
+                      setCredit({
+                        ...credit,
+                        grasse: 0,
+                      });
+                    }
+                    let echeance = await handleCalculate();
+                    setDisplayEcheance(echeance);
+                  }}
+                />
+              </div>
+            </DialogBody>
+            <DialogFooter className="space-x-2">
+              <Button variant="outlined" color="red" onClick={handleOpenAccept}>
+                close
+              </Button>
+              <Button variant="gradient" color="green" type="submit">
+                Accept
+              </Button>
+            </DialogFooter>
+          </form>
+        </Dialog>
+      </Fragment>
+
+      <Fragment>
+        {/* <Button onClick={handelPdvCreditopen} variant="gradient">
+          Open Dialog
+        </Button> */}
+        <Dialog
+          open={pdvCreditopen}
+          handler={handelPdvCreditopen}
+          className="p-4"
+        >
+          <div className="w-full rounded-md border-gray-500 border">
+            <div className="w-full p-4 flex gap-2 flex-col justify-center items-center border-b border-gray-500 ">
+              <div className="bg-green-400 p-2 text-green-900 rounded-full ">
+                <IoCalendarOutline size={24} />
+              </div>
+              <span className="text-center text-sm font-medium">
+                Remboursement Mensuel
+              </span>
+              <span className="text-green-500 font-semibold">
+                {displayEcheance} Dt
+              </span>
+            </div>
+            <div className="grid grid-cols-3">
+              <div className="p-4 flex gap-2 flex-col justify-center items-center ">
+                <div className="bg-green-400 p-2 text-green-900 rounded-full ">
+                  <FaCoins size={24} />
+                </div>
+                <span className="text-center text-sm font-medium">
+                  Financement Sollicite
+                </span>
+                <span className="text-green-500 font-semibold">
+                  {credit.montant} Dt
+                </span>
+              </div>
+              <div className="p-4 flex gap-2 flex-col justify-center items-center border-l border-gray-500 ">
+                <div className="bg-green-400 p-2 text-green-900 rounded-full ">
+                  <HiOutlineClipboardDocumentList size={24} />
+                </div>
+                <span className="text-center text-sm font-medium">
+                  Frais d'etudes de Dossier
+                </span>
+                <span className="text-green-500 font-semibold">
+                  {fraisDoc} Dt
+                </span>
+              </div>
+              <div className="p-4 flex gap-2 flex-col justify-center items-center border-l border-gray-500 ">
+                <div className="bg-green-400 p-2 text-green-900 rounded-full ">
+                  <FaPercent size={20} />
+                </div>
+                <span className="text-center text-sm font-medium">
+                  Frais d'Endettement Mensuel
+                </span>
+                <span className="text-green-500 font-semibold">
+                  {credit.interet} %
+                </span>
+              </div>
+            </div>
+          </div>
         </Dialog>
       </Fragment>
     </div>

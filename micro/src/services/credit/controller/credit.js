@@ -157,22 +157,21 @@ const Etat = async (req, res) => {
         existingcredit.interet = interet;
     }
 
-    if (etat === "Acceptee") {
-        console.log('Accepted');
-        let existingsocketIds;
-        try {
-            existingsocketIds = await socketIds.findOne({ userid: existingcredit.userid });
-        } catch (error) {
-            console.log(error);
-        }
-        console.log(existingsocketIds);
-        
-        if (existingsocketIds) {
-            socketID =  existingsocketIds.socketid;
-            console.log(socketID);
-        }
-        // io.emit("Alert", { success: true, data: "credit was accepted congrats" });
+
+    let existingsocketIds;
+    try {
+        existingsocketIds = await socketIds.findOne({ userid: existingcredit.userid });
+    } catch (error) {
+        console.log(error);
     }
+    console.log(existingsocketIds);
+
+    if (existingsocketIds) {
+        socketID = existingsocketIds.socketid;
+        console.log(socketID);
+    }
+    // io.emit("Alert", { success: true, data: "credit was accepted congrats" });
+
 
     try {
         await existingcredit.save();
