@@ -1,7 +1,7 @@
 const ROUTES = [
     {
         url: '/credit',
-        auth: true,
+        auth: false,
         permissions: ['admin', 'pdv', 'finance'],
         rateLimit: {
             windowMs: 15 * 60 * 1000,
@@ -53,15 +53,25 @@ const ROUTES = [
         permissions: ['admin', 'pdv', 'finance'],
         rateLimit: {
             windowMs: 15 * 60 * 1000,
-            max: 100
+            max: 1000
         },
+        // proxy: {
+        //     target: "http://localhost:5001",
+        //     changeOrigin: true,
+        //     pathRewrite: {
+        //         [`^/user/(.*)`]: '/$1',
+        //     },
+
+        // }
         proxy: {
             target: "http://localhost:5001",
             changeOrigin: true,
             pathRewrite: {
-                [`^/user`]: '',
-            },
+                '^/user/': '',
+            }
+
         }
+
     }
 ]
 

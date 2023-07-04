@@ -249,8 +249,12 @@ const Packs = () => {
           ) : null}
         </div>
       </div>
-
-      <div className="mt-10 w-full grid grid-cols-3 gap-4">
+        {filterData.length === 0 ? 
+          <div className="w-full h-96 flex items-center justify-center">
+            <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+          </div>
+        :
+      <div className="mt-10 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filterData
           .slice(0)
           .reverse()
@@ -273,7 +277,7 @@ const Packs = () => {
                     className="m-0 rounded-none"
                   >
                     <img
-                      src={`${path}uploads/images/${picture}`}
+                      src={`${path}service/uploads/images/${picture}`}
                       alt="ui/ux review check"
                       className="h-60"
                     />
@@ -342,7 +346,7 @@ const Packs = () => {
             }
           )}
       </div>
-
+      }
       <Fragment>
         <Dialog size="lg" open={open} handler={ToggleDialog}>
           <DialogHeader>Add an Admin.</DialogHeader>
@@ -378,7 +382,7 @@ const Packs = () => {
               ) : formValues.picture ? (
                 <div className=" relative w-40 h-hidden rounded-md shadow-inner mx-auto ">
                   <img
-                    src={`${path}uploads/images/${formValues.picture}`}
+                    src={`${path}service/uploads/images/${formValues.picture}`}
                     alt="product_pic"
                     className="h-full w-full object-cover object-center rounded-md"
                   />

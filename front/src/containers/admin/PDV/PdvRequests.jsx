@@ -56,9 +56,7 @@ const PdvRequests = () => {
   };
 
   const fetchData = async () => {
-    const result = await axios.post(`http://localhost:5000/user/pdvs`, {
-      active: "null",
-    });
+    const result = await axios.get(`http://localhost:5000/user/pdvs/requests`);
 
     setfilterData(result.data.data);
     setmasterData(result.data.data);
@@ -95,7 +93,7 @@ const PdvRequests = () => {
     });
 
     if (willDelete) {
-      const result = await axios.post(`http://localhost:5000/user/lock/${id}`, {
+      const result = await axios.post(`http://localhost:5001/lock/${id}`, {
         lock,
       });
 

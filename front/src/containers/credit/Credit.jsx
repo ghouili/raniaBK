@@ -1,3 +1,4 @@
+import 'resize-observer-polyfill';
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -106,6 +107,7 @@ const Credit = () => {
     packid: "",
     offreid: "",
     userid: user?._id,
+    montant_ech: 0,
   });
   const [minMant, setMinMant] = useState(0);
   const [maxMant, setMaxMant] = useState(0);
@@ -256,7 +258,7 @@ const Credit = () => {
         url = `${path}credit/${formValues._id}`;
         result = await axios.put(url, formValues);
       } else {
-        url = `${path}credit/add`;
+        url = `http://localhost:5004/add`;
         result = await axios.post(url, formValues);
       }
       // console.log(result);
@@ -286,7 +288,7 @@ const Credit = () => {
 
     if (willDelete) {
       const result = await axios.put(
-        `http://localhost:5000/credit/etat/${id}`,
+        `http://localhost:5004/etat/${id}`,
         { etat: "Refusee" }
       );
 
@@ -319,7 +321,7 @@ const Credit = () => {
       //   etat: "Acceptee",
       // });
       const result = await axios.put(
-        `http://localhost:5000/credit/etat/${credit._id}`,
+        `http://localhost:5004/etat/${credit._id}`,
         {
           interet: credit.interet,
           duree: credit.duree,
@@ -447,173 +449,178 @@ const Credit = () => {
           </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-0">
-          <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+          {filterData.length === 0 ? (
+            <div className="w-full h-96 flex items-center justify-center">
+              <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+            </div>
+          ) : (
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                     >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filterData
-                .slice(0)
-                .reverse()
-                .map(
-                  (
-                    {
-                      _id,
-                      montant,
-                      montant_ech,
-                      duree,
-                      grasse,
-                      payed,
-                      etat,
-                      rembource,
-                      date,
-                      packid,
-                      userid,
-                    },
-                    index
-                  ) => {
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filterData
+                  .slice(0)
+                  .reverse()
+                  .map(
+                    (
+                      {
+                        _id,
+                        montant,
+                        montant_ech,
+                        duree,
+                        grasse,
+                        payed,
+                        etat,
+                        rembource,
+                        date,
+                        packid,
+                        userid,
+                      },
+                      index
+                    ) => {
+                      // if (user._id !== userid || userid !== '6464d4db624ebfd44f611142' ) {
+                      //   return null;
+                      // }
 
-                    // if (user._id !== userid || userid !== '6464d4db624ebfd44f611142' ) {
-                    //   return null;
-                    // }
+                      console.log(user._id);
+                      let pack = packs.filter((item) => item._id === packid);
+                      let pdv = pdvs.filter((item) => item._id === userid);
+                      // console.log(pack);
+                      // console.log(pdv);
+                      const isLast = index === filterData.length - 1;
+                      const classes = isLast
+                        ? "p-4"
+                        : "p-4 border-b border-blue-gray-50";
 
-                    console.log(user._id);
-                    let pack = packs.filter((item) => item._id === packid);
-                    let pdv = pdvs.filter((item) => item._id === userid);
-                    // console.log(pack);
-                    // console.log(pdv);
-                    const isLast = index === filterData.length - 1;
-                    const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
-                    
-                    return (
-                      <tr key={_id}>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              <Link
-                                to={`/offres/${packid}`}
-                                className="text-blue-700 hover:text-blue-900 underline "
+                      return (
+                        <tr key={_id}>
+                          <td className={classes}>
+                            <div className="flex items-center gap-3">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
                               >
-                                {pack[0]?.nom}
-                              </Link>{" "}
-                              (<b>{montant}</b> DT) / <b>{montant_ech}</b> DT
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              <Link
-                                to={`/offres/${packid}`}
-                                className="text-blue-700 hover:text-blue-900 underline "
+                                <Link
+                                  to={`/offres/${packid}`}
+                                  className="text-blue-700 hover:text-blue-900 underline "
+                                >
+                                  {pack[0]?.nom}
+                                </Link>{" "}
+                                (<b>{montant}</b> DT) / <b>{montant_ech}</b> DT
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
                               >
-                                {pdv[0]?.name}
-                              </Link>
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="flex flex-col">
+                                <Link
+                                  to={`/offres/${packid}`}
+                                  className="text-blue-700 hover:text-blue-900 underline "
+                                >
+                                  {pdv[0]?.name}
+                                </Link>
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                <b>{duree}</b> par <b>{rembource}</b> apres{" "}
+                                <b>{grasse}</b> mois
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="w-max">
+                              <Chip
+                                variant="ghost"
+                                size="sm"
+                                color={
+                                  etat === "Acceptee"
+                                    ? "green"
+                                    : etat === "Refusee"
+                                    ? "red"
+                                    : "blue-gray"
+                                }
+                                value={etat}
+                                // color="blue-gray"
+                              />
+                            </div>
+                          </td>
+                          <td className={classes}>
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              <b>{duree}</b> par <b>{rembource}</b> apres{" "}
-                              <b>{grasse}</b> mois
+                              {date}
                             </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip
-                              variant="ghost"
-                              size="sm"
-                              color={
-                                etat === "Acceptee"
-                                  ? "green"
-                                  : etat === "Refusee"
-                                  ? "red"
-                                  : "blue-gray"
-                              }
-                              value={etat}
-                              // color="blue-gray"
-                            />
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {date}
-                          </Typography>
-                        </td>
-                        <td className={classes}>
-                          <Tooltip content="Accept Credit">
-                            <IconButton
-                              variant="text"
-                              color="blue"
-                              onClick={() => fetchCredit(_id, true)}
-                            >
-                              <EyeIcon className="h-5 w-5 text-green-900 " />
-                            </IconButton>
-                          </Tooltip>
-                          {etat === "Refusee" ? null : (
-                            <Tooltip content="Refuse Credit">
+                          </td>
+                          <td className={classes}>
+                            <Tooltip content="Details Credit">
                               <IconButton
                                 variant="text"
-                                color="red"
-                                onClick={() => Refuse(_id)}
+                                color="blue"
+                                onClick={() => fetchCredit(_id, true)}
                               >
-                                <XMarkIcon className="h-5 w-5 text-red-900" />
+                                <EyeIcon className="h-5 w-5 text-green-900 " />
                               </IconButton>
                             </Tooltip>
-                          )}
-                          {etat === "Acceptee" ? null : (
-                            <Tooltip content="Accept Credit">
-                              <IconButton
-                                variant="text"
-                                color="green"
-                                onClick={() => fetchCredit(_id)}
-                              >
-                                <CheckIcon className="h-5 w-5 text-green-900 " />
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
-            </tbody>
-          </table>
+                            {etat === "Refusee" ? null : (
+                              <Tooltip content="Refuse Credit">
+                                <IconButton
+                                  variant="text"
+                                  color="red"
+                                  onClick={() => Refuse(_id)}
+                                >
+                                  <XMarkIcon className="h-5 w-5 text-red-900" />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                            {etat === "Acceptee" ? null : (
+                              <Tooltip content="Accept Credit">
+                                <IconButton
+                                  variant="text"
+                                  color="green"
+                                  onClick={() => fetchCredit(_id)}
+                                >
+                                  <CheckIcon className="h-5 w-5 text-green-900 " />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
+              </tbody>
+            </table>
+          )}
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Typography variant="small" color="blue-gray" className="font-normal">
@@ -635,10 +642,10 @@ const Credit = () => {
           open={open}
           handler={handleOpen}
           size="lg"
-          animate={{
-            mount: { scale: 1, y: 0 },
-            unmount: { scale: 0.9, y: -100 },
-          }}
+          // animate={{
+          //   mount: { scale: 1, y: 0 },
+          //   unmount: { scale: 0.9, y: -100 },
+          // }}
         >
           <DialogHeader>Demande de Credit</DialogHeader>
           <form onSubmit={handleSubmit}>

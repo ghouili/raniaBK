@@ -279,145 +279,150 @@ const Offres_pack = () => {
         </div>
       </div>
 
-      <table className="mt-4 w-full min-w-max table-auto text-left">
-        <thead>
-          <tr>
-            {TABLE_HEAD.map((head) => (
-              <th
-                key={head}
-                className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-              >
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
+      {filterData.length === 0 ? (
+        <div className="w-full h-96 flex items-center justify-center">
+          <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+        </div>
+      ) : (
+        <table className="mt-4 w-full min-w-max table-auto text-left">
+          <thead>
+            <tr>
+              {TABLE_HEAD.map((head) => (
+                <th
+                  key={head}
+                  className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                 >
-                  {head}
-                </Typography>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {filterData
-            .slice(0)
-            .reverse()
-            .map(
-              (
-                {
-                  _id,
-                  title,
-                  description,
-                  montant_min,
-                  montant_max,
-                  packid,
-                  picture,
-                },
-                index
-              ) => {
-                // console.log(packid);
-                const isLast = index === filterData.length - 1;
-                const classes = isLast
-                  ? "p-4"
-                  : "p-4 border-b border-blue-gray-50";
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal leading-none opacity-70"
+                  >
+                    {head}
+                  </Typography>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filterData
+              .slice(0)
+              .reverse()
+              .map(
+                (
+                  {
+                    _id,
+                    title,
+                    description,
+                    montant_min,
+                    montant_max,
+                    packid,
+                    picture,
+                  },
+                  index
+                ) => {
+                  // console.log(packid);
+                  const isLast = index === filterData.length - 1;
+                  const classes = isLast
+                    ? "p-4"
+                    : "p-4 border-b border-blue-gray-50";
 
-                return (
-                  <tr key={_id}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        <Avatar
-                          src={`${path}uploads/images/${picture}`}
-                          alt="avatar"
-                          variant="rounded"
-                          withBorder={true}
-                          color="gray"
-                          className="p-0.5"
-                        />
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="flex flex-col">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
+                  return (
+                    <tr key={_id}>
+                      <td className={classes}>
+                        <div className="flex items-center gap-3">
+                          <Avatar
+                            src={`${path}offre/uploads/images/${picture}`}
+                            alt="avatar"
+                            variant="rounded"
+                            withBorder={true}
+                            color="gray"
+                            className="p-0.5"
+                          />
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {title}
+                          </Typography>
+                        </div>
+                      </td>
+                      <td className={` max-w-lg ${classes}`}>
+                        <div className="flex flex-col">
+                          <Tooltip
+                            content={description}
+                            animate={{
+                              mount: { scale: 1, y: 0 },
+                              unmount: { scale: 0, y: 25 },
+                            }}
+                            className="max-w-screen-lg text-costumBlue font-medium bg-costumGreen p-1"
+                          >
+                            <p className="line-clamp-2">{description}</p>
+                          </Tooltip>
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-max">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            [{montant_min} ~~ {montant_max}]
+                          </Typography>
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <Link
+                          to={`/offres/${packid._id}`}
+                          className="text-blue-700 hover:text-blue-900 underline "
                         >
-                          {title}
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={` max-w-lg ${classes}`}>
-                      <div className="flex flex-col">
-                        <Tooltip
-                          content={description}
-                          animate={{
-                            mount: { scale: 1, y: 0 },
-                            unmount: { scale: 0, y: 25 },
-                          }}
-                          className="max-w-screen-lg text-costumBlue font-medium bg-costumGreen p-1"
-                        >
-                          <p className="line-clamp-2">{description}</p>
-                        </Tooltip>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="w-max">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          [{montant_min} ~~ {montant_max}]
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Link
-                        to={`/offres/${packid._id}`}
-                        className="text-blue-700 hover:text-blue-900 underline "
+                          {packid.nom}
+                        </Link>
+                      </td>
+                      <td
+                        className={`max-w-md flex items-center gap-4 py-6  ${classes}`}
                       >
-                        {packid.nom}
-                      </Link>
-                    </td>
-                    <td
-                      className={`max-w-md flex items-center gap-4 py-6  ${classes}`}
-                    >
-                      <Tooltip content="Edit User">
-                        <IconButton
-                          variant="text"
-                          color="blue-gray"
-                          onClick={() =>
-                            Update_offre({
-                              _id,
-                              title,
-                              description,
-                              montant_min,
-                              montant_max,
-                              packid,
-                              picture,
-                            })
-                          }
-                        >
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip content="Edit User">
-                        <IconButton
-                          variant="text"
-                          color="red"
-                          onClick={() => deletePack(_id)}
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
-        </tbody>
-      </table>
-
+                        <Tooltip content="Edit User">
+                          <IconButton
+                            variant="text"
+                            color="blue-gray"
+                            onClick={() =>
+                              Update_offre({
+                                _id,
+                                title,
+                                description,
+                                montant_min,
+                                montant_max,
+                                packid,
+                                picture,
+                              })
+                            }
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip content="Edit User">
+                          <IconButton
+                            variant="text"
+                            color="red"
+                            onClick={() => deletePack(_id)}
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  );
+                }
+              )}
+          </tbody>
+        </table>
+      )}
       <Fragment>
         <Dialog size="lg" open={open} handler={ToggleDialog}>
           <DialogHeader>Add a Pack Credit.</DialogHeader>
@@ -453,7 +458,7 @@ const Offres_pack = () => {
               ) : formValues.picture ? (
                 <div className=" relative w-40 h-hidden rounded-md shadow-inner mx-auto ">
                   <img
-                    src={`${path}uploads/images/${formValues.picture}`}
+                    src={`${path}offre/uploads/images/${formValues.picture}`}
                     alt="product_pic"
                     className="h-full w-full object-cover object-center rounded-md"
                   />

@@ -1,4 +1,6 @@
 const credit = require("../model/credit");
+const service = require("../model/services");
+const user = require("../model/user");
 const socketIds = require("../model/socketIds");
 const moment = require("moment");
 
@@ -45,10 +47,12 @@ const GetAll = async (req, res) => {
     let allcredit;
     try {
         // allcredit = await credit.deleteMany({});
-        // allcredit = await credit.find().populate('packid','service');
+
         allcredit = await credit.find();
+        // allcredit = await credit.find().populate('userid', 'user');
         // await credit.deleteMany({});
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ success: false, message: ' server error ', data: error });
     }
 

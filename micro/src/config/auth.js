@@ -36,7 +36,7 @@ const checkAuth = (permissions) => {
       return res.status(403).json({ success: false, message: 'Unauthorized Access', data: null });
     }
 
-    console.log(permissions.includes(decodedToken.role));
+    console.log(" checking permissions");
     // req.user = { userId: decodedToken.userId };
     next();
   };

@@ -2,15 +2,17 @@ const express = require('express')
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 const Router = require('./router/user');
 
 const app = express();
 const port = 5001;
 
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(cors({
-    origin: '*'
+    origin: '*',
+    methods: ["GET", "POST"]
 }));
 
 app.use("/uploads/images", express.static(path.join("uploads", "images")));

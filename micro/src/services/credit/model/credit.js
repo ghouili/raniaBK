@@ -13,7 +13,8 @@ const CreditSchema = new mongoose.Schema({
     rembource:{type:String} ,
     packid:{type: mongoose.Types.ObjectId, ref: 'service', required: true} ,
     offreid:{type: mongoose.Types.ObjectId, ref: 'offre', required: true} ,
-    userid:{type: mongoose.Types.ObjectId, ref: 'user', required: true} ,
+    // userid:{type: mongoose.Types.ObjectId, ref: 'user', required: true} ,
+    userid: { type: mongoose.Types.ObjectId, required: true, ref: "user" },
 
 
 });

@@ -13,7 +13,7 @@ route.get('/all', UserController.GetAll);
 
 route.get('/pdvs', UserController.GetAllPdv);
 
-route.post('/pdvs', UserController.GetRequestPdv);
+route.get('/pdvs/requests', UserController.GetRequestPdv);
 
 route.get('/:id', UserController.FindById);
 

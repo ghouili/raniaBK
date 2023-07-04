@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const { ROUTES } = require('./config/routes');
 
-// const { setupLogging } = require('./config/logging');
+const { setupLogging } = require('./config/logging');
 const {setupRateLimit} = require('./config/ratelimit');
 const { setupProxies } = require('./config/proxy');
 const {setupAuth} = require('./config/auth');
@@ -29,7 +29,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// setupLogging(app);
+setupLogging(app);
 setupRateLimit(app, ROUTES);
 setupAuth(app, ROUTES);
 setupProxies(app, ROUTES);

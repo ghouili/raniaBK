@@ -86,16 +86,16 @@ const GetAll = async (req, res) => {
 
 const GetRequestPdv = async (req, res) => {
 
-    const { active } = req.body;
+    // const { active } = req.body;
 
     let allUser;
     try {
-        allUser = await user.find({ active: active, role: 'pdv' });
+        allUser = await user.find({ active: "null", role: 'pdv' });
     } catch (error) {
         return res.status(500).json({ success: false, message: 'internal server error when find', data: error });
     }
 
-    return res.status(200).json({ success: true, message: 'all users', data: allUser });
+    return res.status(200).json({ success: true, message: 'Requests', data: allUser });
 
 }
 
@@ -736,60 +736,6 @@ const Lock = async (req, res) => {
     const { lock } = req.body;
     const { id } = req.params;
 
-    // if (lock === false) {
-    // let existingUser;
-    // try {
-    //     existingUser = await user.findById(id);
-    // } catch (error) {
-    //     return res.status(500).json({ success: false, message: 'internal error server', data: error });
-    // }
-
-    // if (!existingUser) {
-    //     return res.status(200).json({ success: false, message: 'user donst exist!!', data: null });
-    // }
-
-
-
-    // try {
-    //     await existingUser.deleteOne();
-    // } catch (error) {
-    //     return res.status(400).json({ success: false, message: 'internal server error', data: error });
-    // }
-
-    // if (existingUser.avatar) {
-    //     let path = `./uploads/images/${existingUser.avatar}`;
-    //     if (fs.existsSync(path)) {
-    //         try {
-    //             fs.unlinkSync(path)
-    //             //file removed
-    //         } catch (error) {
-    //             console.log(error);
-    //             return res.status(500).json({ success: false, message: error, error: error })
-    //         }
-    //     }
-    // }
-    // if (existingUser.cin) {
-    //     let path = `./uploads/images/${existingUser.cin}`;
-    //     try {
-    //         fs.unlinkSync(path)
-    //         //file removed
-    //     } catch (error) {
-    //         console.log(error);
-    //         return res.status(500).json({ success: false, message: error, error: error })
-    //     }
-    // }
-    // if (existingUser.patent) {
-    //     let path = `./uploads/images/${existingUser.patent}`;
-    //     try {
-    //         fs.unlinkSync(path)
-    //         //file removed
-    //     } catch (error) {
-    //         console.log(error);
-    //         return res.status(500).json({ success: false, message: error, error: error })
-    //     }
-    // }
-    // return res.status(200).json({ success: true, message: 'user updated successfully', data: existingUser });
-    // }
 
     let existingUser;
     try {

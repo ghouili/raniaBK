@@ -106,7 +106,7 @@ const Offres = () => {
       <div className="w-4/6 ">
         <img
           // src="https://www.usinenouvelle.com/mediatheque/4/2/7/000935724_896x598_c.jpg"
-          src={`${path}user/uploads/images/${data.picture}`}
+          src={`${path}service/uploads/images/${data.picture}`}
           alt="intro"
           className="w-full"
         />
@@ -145,7 +145,7 @@ const Offres = () => {
                       <AccordionBody className="px-10 text-lg font-medium ">
                         <div className="flex gap-4 items-start">
                           <Avatar
-                            src={`${path}user/uploads/images/${picture}`}
+                            src={`${path}credit/uploads/images/${picture}`}
                             alt="credit_pic"
                             variant="rounded"
                             size="xxl"
