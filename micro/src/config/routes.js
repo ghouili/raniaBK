@@ -1,4 +1,20 @@
 const ROUTES = [
+    // {
+    //     url: '/google',
+    //     auth: false,
+    //     permissions: ['admin', 'pdv', 'finance'],
+    //     rateLimit: {
+    //         windowMs: 15 * 60 * 1000,
+    //         max: 100
+    //     },
+    //     proxy: {
+    //         target: "https://www.google.com",
+    //         changeOrigin: true,
+    //         pathRewrite: {
+    //             [`^/google`]: '',
+    //         },
+    //     }
+    // },
     {
         url: '/credit',
         auth: false,

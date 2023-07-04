@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { AdminNavbar, Navbar, Navbar_, Notification, Sidebar } from '../components';
-import { Register, Login, LandingPage, Packs, Wallet, Simulateur, User, Finance, Pointvente, Offres, Users, Pdvs, PdvRequests, Dashboard, Nospack, PackDetails, Credit, Offres_pack, Profile } from '../containers';
+import { Register, Login, LandingPage, Packs, Wallet, Simulateur, User, Finance, Pointvente, Offres, Users, Pdvs, PdvRequests, Dashboard, Nospack, PackDetails, Credit, Offres_pack, Profile, NCredit } from '../containers';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 //import axios from 'axios';
@@ -127,6 +127,11 @@ const MainRoutes = () => {
             <Route path='credit' element={
               <PrivetRoute permissions={['admin', 'pdv', 'finance']} >
                 <Credit />
+              </PrivetRoute>
+            } />
+            <Route path='ncredit' element={
+              <PrivetRoute permissions={['admin', 'pdv', 'finance']} >
+                <NCredit />
               </PrivetRoute>
             } />
 

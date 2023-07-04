@@ -437,7 +437,7 @@ const Add_PDV = async (req, res) => {
     const recipientNumber = telString.startsWith("216")
         ? telString
         : `216${telString}`;
-    const message = `Mr(s) ${name}, your Request to become a PDV has been successfully submitted. Here is your password: ${password}. Please keep your it in a safe place, You can change your password anytime by logging into your account.`;
+    const message = `Mr(s) ${name}, your Request to become a PDV has been successfully submitted. Here is your password: ${password}. Please keep it in a safe place, You can change your password anytime by logging into your account after .`;
 
     const url = `${smsAPIUrl}?action=send-sms&api_key=${apiKey}&to=${recipientNumber}&from=
         ${senderName}&sms=${encodeURIComponent(message)}`;
@@ -455,13 +455,13 @@ const Add_PDV = async (req, res) => {
         service: "gmail",
         // port: 2525,
         auth: {
-            user: "sebntn.contact@gmail.com",
-            pass: "joucivcesyymsnjd"
+            user: "khallasli.contact@gmail.com",
+            pass: "tldaugxcpedymccf"
         }
     });
 
     let info = await transporter.sendMail({
-        from: 'sebntn.contact@gmail.com', // sender address
+        from: 'khallasli.contact@gmail.com', // sender address
         to: email, // list of receivers
         subject: "New Account Created", // Subject line
         // text: "Hello world?", // plain text body

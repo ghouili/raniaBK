@@ -6,4 +6,13 @@ const setupProxies = (app, routes) => {
     })
 }
 
+// app.use('/credit', createProxyMiddleware({
+//     target: "http://localhost:5004",
+//     changeOrigin: true,
+//     pathRewrite: {
+//         [`^/credit`]: '',
+//     },
+// }));
+
+
 exports.setupProxies = setupProxies

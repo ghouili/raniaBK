@@ -7,7 +7,7 @@ const CreditSchema = new mongoose.Schema({
     interet:{type:Number, default: 1.25} ,
     duree:{type:Number} ,
     grasse:{type:Number} ,
-    payed:{type:Number} ,
+    payed:{type:Number, default: 0} ,
     etat:{type:String, default: 'En Cours'} ,
     date:{type:String} ,
     rembource:{type:String} ,

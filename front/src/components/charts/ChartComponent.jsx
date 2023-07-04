@@ -8,7 +8,7 @@ const ChartComponent = ({ pieLabels, pieData}) => {
     labels: pieLabels,
     datasets: [
       {
-        label: "# of Votes",
+        label: " of credit",
         data: pieData,
         // data: [12, 19, 3, 5, 2, 3],
         backgroundColor: [

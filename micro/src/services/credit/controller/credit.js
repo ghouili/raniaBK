@@ -11,7 +11,6 @@ const Addcredit = async (req, res) => {
         montant_ech,
         duree,
         grasse,
-        payed,
         rembource,
         packid,
         offreid,
@@ -24,12 +23,11 @@ const Addcredit = async (req, res) => {
         montant_ech,
         duree,
         grasse,
-        payed,
-        date: moment().format('LLL'),
         rembource,
         packid,
         offreid,
-        userid
+        userid,
+        date: moment().format('LLL'),
     });
 
     try {

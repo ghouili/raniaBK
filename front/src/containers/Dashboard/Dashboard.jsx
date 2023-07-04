@@ -10,8 +10,8 @@ import axios from "axios";
 import { path } from "../../utils/Variables";
 const Dashboard = () => {
   const [pie, setPie] = useState({
-    offerTitles: ["test", "aaa"],
-    offerIdCounts: [1, 1],
+    offerTitles: ["offre01", "offre02"],
+    offerIdCounts: [0, 0],
   });
   const [data, setData] = useState({
     credit: 0,

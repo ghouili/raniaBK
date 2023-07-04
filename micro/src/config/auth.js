@@ -11,6 +11,8 @@ const setupAuth = (app, routes) => {
   });
 };
 
+// 'authorization' : `Bearer ${token}`
+
 const checkAuth = (permissions) => {
   return async (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -19,11 +21,6 @@ const checkAuth = (permissions) => {
     }
 
     const token = authHeader.split(' ')[1];
-
-    // Check if the token is in the blacklist
-    if (tokenBlacklist.includes(token)) {
-      return res.status(401).json({ success: false, message: 'Token has been invalidated', data: null });
-    }
 
     let decodedToken;
     try {

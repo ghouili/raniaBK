@@ -16,5 +16,6 @@ export { default as Pdvs } from './admin/PDV/Pdvs';
 export { default as PdvRequests } from './admin/PDV/PdvRequests';
 export { default as Register } from './auth/Request';
 export { default as Credit } from './credit/Credit';
+export { default as NCredit } from './credit/NCredit';
 export { default as Offres_pack } from './offres_pack/Offres_pack';
 export { default as Profile } from './auth/Profile';

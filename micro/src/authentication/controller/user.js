@@ -24,12 +24,12 @@ const Login = async (req, res) => {
     if (!compare) {
         return res.status(200).json({ success: false, message: 'Check Your Password', data: null });
     }
-    console.log('====================================');
-    console.log(process.env.JWT_SECRET);
-    console.log('====================================');
+    // console.log('====================================');
+    // console.log(process.env.JWT_SECRET);
+    // console.log('====================================');
     // Create JWT token
     const token = jwt.sign({ userId: existingUser._id, email: existingUser.email, username: existingUser.name, role: existingUser.role }, process.env.JWT_SECRET, {
-        expiresIn: '1h' // Token expires in 1 minute
+        expiresIn: '24h' // Token expires in 1 minute
     });
 
     return res.status(200).json({ success: true, message: `Logged Successfully, Welcome Mr/Miss/Mrs ${existingUser.name}`, data: existingUser, token });
