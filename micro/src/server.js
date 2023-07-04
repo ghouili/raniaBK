@@ -12,6 +12,7 @@ const {setupAuth} = require('./config/auth');
 const socketHandler = require('./socketHandler/controller/socketHandler');
 
 const AuthRouter = require('./authentication/router/user');
+const statsController = require('./stats/stats');
 
 const app = express()
 const port = 5000;
@@ -35,6 +36,8 @@ setupAuth(app, ROUTES);
 setupProxies(app, ROUTES);
 
 app.use('/auth', AuthRouter);
+app.get('/stats', statsController.GetAll);
+app.get('/piestats', statsController.PieStats);
 
 socketHandler(io);
 // io.on("connection", (socket) => {

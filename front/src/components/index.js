@@ -10,4 +10,5 @@ export { default as Navbar_ } from './navbar_/Navbar_';
 export { default as AdminNavbar } from './adminNavbar/Navbar';
 export { default as DisplayBigger } from './displayBigger/DisplayBigger';
 export { default as Notification } from './notification/Notification';
+export { default as ChartComponent } from './charts/ChartComponent';
 

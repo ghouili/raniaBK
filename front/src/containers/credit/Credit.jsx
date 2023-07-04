@@ -449,7 +449,7 @@ const Credit = () => {
           </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-0">
-          {filterData.length === 0 ? (
+          {filterData?.length === 0 ? (
             <div className="w-full h-96 flex items-center justify-center">
               <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
             </div>

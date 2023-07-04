@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const generator = require('generate-password');
 const nodemailer = require("nodemailer");
 // const jwt = require('jsonwebtoken');
+const axios = require('axios');
 const fs = require('fs');
 
 const test = async (req, res) => {
@@ -129,7 +130,7 @@ const GetAllAdmins = async (req, res) => {
 
 const GetAllFinance = async (req, res) => {
 
-   
+
 
     let allUser;
     try {
@@ -427,27 +428,27 @@ const Add_PDV = async (req, res) => {
         return res.status(500).json({ success: false, message: 'internal server error', data: error });
     }
 
-    // const smsAPIUrl = "https://www.winsmspro.com/sms/sms/api";
-    // const apiKey = "eUVFc2k9RT1JcGpmQVBJb2FzeWE=";
-    // const senderName = "KHALLASLI";
+    const smsAPIUrl = "https://www.winsmspro.com/sms/sms/api";
+    const apiKey = "eUVFc2k9RT1JcGpmQVBJb2FzeWE=";
+    const senderName = "KHALLASLI";
 
-    // // Convert `tel` to a string and check if it starts with "216"
-    // const telString = String(tel);
-    // const recipientNumber = telString.startsWith("216")
-    //     ? telString
-    //     : `216${telString}`;
-    // const message = `Mr(s) ${name}, your Request to become a PDV has been successfully submitted. Here is your password: ${password}. Please keep your it in a safe place, You can change your password anytime by logging into your account.`;
+    // Convert `tel` to a string and check if it starts with "216"
+    const telString = String(tel);
+    const recipientNumber = telString.startsWith("216")
+        ? telString
+        : `216${telString}`;
+    const message = `Mr(s) ${name}, your Request to become a PDV has been successfully submitted. Here is your password: ${password}. Please keep your it in a safe place, You can change your password anytime by logging into your account.`;
 
-    // const url = `${smsAPIUrl}?action=send-sms&api_key=${apiKey}&to=${recipientNumber}&from=
-    //     ${senderName}&sms=${encodeURIComponent(message)}`;
+    const url = `${smsAPIUrl}?action=send-sms&api_key=${apiKey}&to=${recipientNumber}&from=
+        ${senderName}&sms=${encodeURIComponent(message)}`;
 
-    // axios.get(url)
-    //     .then(() => {
-    //         console.log("SMS sent successfully");
-    //     })
-    //     .catch((error) => {
-    //         console.error("Failed to send SMS:", error);
-    //     });
+    axios.get(url)
+        .then(() => {
+            console.log("SMS sent successfully");
+        })
+        .catch((error) => {
+            console.error("Failed to send SMS:", error);
+        });
 
     var transporter = nodemailer.createTransport({
         // host: "smtp.mailtrap.io",
@@ -473,7 +474,7 @@ const Add_PDV = async (req, res) => {
             <p style="font-size: 18px; color: #3d3d3d;">Please keep your password in a safe place. You can change your password anytime by logging into your account.</p>
             <p style="font-size: 18px; color: #3d3d3d;">Here is your password: <strong>${password}</strong></p>
             <div style="text-align: center; margin-top: 40px;">
-                <a href="https://www.google.com/" style="display: inline-block; background-color: #0066ff; color: white; font-size: 18px; padding: 12px 30px; text-decoration: none; border-radius: 30px;">Check out our App</a>
+                <a href="http://localhost:3000/" style="display: inline-block; background-color: #0066ff; color: white; font-size: 18px; padding: 12px 30px; text-decoration: none; border-radius: 30px;">Check out our App</a>
             </div>
             <p style="font-size: 16px; color: #666; margin-top: 40px;">Thank you for using our App!</p>
         </div>
@@ -642,9 +643,9 @@ const Update_PDV = async (req, res) => {
     if (!existingUser) {
         return res.status(200).json({ success: false, message: 'user donst exist!!', data: null });
     }
-    
+
     if (newPass) {
-        if ( confirmPass !== newPass) {
+        if (confirmPass !== newPass) {
             return res.status(200).json({ success: false, message: 'Confirm password doesnt match the password!!', data: null });
         }
         existingUser.password = await bcrypt.hash(newPass, 10);
