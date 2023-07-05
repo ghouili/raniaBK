@@ -11,11 +11,18 @@ const PrivetRoute = ({ children, permissions }) => {
     if (user) {
         if (permissions.includes(user.role)) {
             return children;
-        } else { 
-            return <Navigate replace to='/' />
+        } else {
+            if (user.role === 'pdv') {
+                return <Navigate replace to='/packs' />
+            } else {
+                return <Navigate replace to='/' />
+            }
+
         }
     } else {
-        return <Navigate  to='/' replace />
+
+        return <Navigate replace to='/' />
+
     }
 
 }

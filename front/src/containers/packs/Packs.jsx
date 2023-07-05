@@ -126,7 +126,7 @@ const Packs = () => {
     });
   };
 
-  const Update_Pack = (item) => {
+  const Modifier_Pack = (item) => {
     // console.log(item);
     setFormValues(item);
     setOpen(true);
@@ -167,36 +167,36 @@ const Packs = () => {
       console.log(result);
       if (result.data.success === true) {
         fetchData();
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
       } else {
-        return swal("Error!", result.data.message, "error");
+        return swal("Erreur!", result.data.message, "error");
       }
     } catch (error) {
       console.error(error);
-      return swal(
-        "Error!",
-        "Something went wrong. Please try again later.",
+      return       swal(
+        "Erreur!",
+        "Veuillez réessayer plus tard.",
         "error"
       );
     }
   };
 
-  const deletePack = async (id) => {
-    const willDelete = await swal({
-      title: "Are you sure?",
-      text: "Are you sure that you want to delete this Pack?",
+  const SupprimerPack = async (id) => {
+    const willSupprimer = await swal({
+          title: "Êtes-vous sûr?",
+      text: "Êtes-vous sûr de vouloir supprimer ce Pack?",
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.delete(`http://localhost:5000/service/${id}`);
 
       if (result.data.success) {
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
@@ -221,7 +221,7 @@ const Packs = () => {
           <div className="relative flex w-full max-w-[24rem]">
             <Input
               type="search"
-              label="Search pack.."
+              label="Recherche pack.."
               value={search}
               onChange={(e) => searchFilter(e.target.value)}
               className="pr-20 border-customColor"
@@ -233,7 +233,7 @@ const Packs = () => {
               size="sm"
               className="!absolute right-1 top-1 rounded bg-customColor"
             >
-              Search
+              Recherche
             </Button>
           </div>
           {user && user?.role === "admin" ? (
@@ -244,17 +244,17 @@ const Packs = () => {
           focus:ring-4 focus:ring-gray-200 "
               onClick={handleOpen}
             >
-              <span className="flex w-full justify-center">Add Packs</span>
+              <span className="flex w-full justify-center">Ajouter Packs</span>
             </button>
           ) : null}
         </div>
       </div>
         {filterData.length === 0 ? 
           <div className="w-full h-96 flex items-center justify-center">
-            <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+            <h1 className="text-4xl text-gray-700 font-bold">il n'y a pas de données à afficher </h1>
           </div>
         :
-      <div className="mt-10 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="mt-10 w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filterData
           .slice(0)
           .reverse()
@@ -286,13 +286,13 @@ const Packs = () => {
                     <Typography variant="h4" color="blue-gray">
                       {nom}
                     </Typography>
-                    <Typography
+                    {/* <Typography
                       variant="lead"
                       color="gray"
                       className="mt-3 font-normal h-36 overflow-y-auto"
                     >
                       {description}
-                    </Typography>
+                    </Typography> */}
                     <div className="w-full border my-1" />
                   </CardBody>
                   <CardFooter className="flex items-center justify-between">
@@ -303,7 +303,7 @@ const Packs = () => {
                     >
                       <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                         <AiOutlineEye />
-                        Details
+                        Detaille
                       </span>
                     </button>
                     {user?.role === "admin" ? (
@@ -311,7 +311,7 @@ const Packs = () => {
                         type="button"
                         className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
                         onClick={() =>
-                          Update_Pack({
+                          Modifier_Pack({
                             _id,
                             nom,
                             description,
@@ -324,7 +324,7 @@ const Packs = () => {
                       >
                         <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                           <BsPencilSquare />
-                          Update
+                          Modifier
                         </span>
                       </button>
                     ) : null}
@@ -332,11 +332,11 @@ const Packs = () => {
                       <button
                         type="button"
                         className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
-                        onClick={() => deletePack(_id)}
+                        onClick={() => SupprimerPack(_id)}
                       >
                         <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                           <IoTrashOutline />
-                          Delete
+                          Supprimer
                         </span>
                       </button>
                     ) : null}
@@ -349,7 +349,7 @@ const Packs = () => {
       }
       <Fragment>
         <Dialog size="lg" open={open} handler={ToggleDialog}>
-          <DialogHeader>Add an Admin.</DialogHeader>
+          <DialogHeader>Ajouter Pack.</DialogHeader>
           <form
             onSubmit={handleSubmit}
             className="overflow-auto"
@@ -425,7 +425,7 @@ const Packs = () => {
               <div className="grid grid-cols-2 gap-4 pb-4">
                 <InputField
                   type="text"
-                  label="Name:"
+                  label="Nom:"
                   name="nom"
                   placeholder="Name"
                   value={formValues.nom}
@@ -442,7 +442,7 @@ const Packs = () => {
                 />
                 <InputField
                   type="text"
-                  label="document_requis:"
+                  label="document requis:"
                   name="document_requis"
                   placeholder="document_requis.."
                   value={formValues.document_requis}
@@ -451,18 +451,18 @@ const Packs = () => {
 
                 <InputField
                   type="text"
-                  label="critere_eligibility:"
+                  label="critère d'éligibilité:"
                   name="critere_eligibility"
-                  placeholder="critere_eligibility.."
+                  placeholder="critère d'éligibilité.."
                   value={formValues.critere_eligibility}
                   onChange={handleInputChange}
                 />
 
                 <InputField
                   type="text"
-                  label="delai_traitement:"
+                  label="delai de traitement:"
                   name="delai_traitement"
-                  placeholder="delai_traitement.."
+                  placeholder="delai de traitement.."
                   value={formValues.delai_traitement}
                   onChange={handleInputChange}
                 />
@@ -475,10 +475,10 @@ const Packs = () => {
                 onClick={ToggleDialog}
                 className="mr-1"
               >
-                <span>Cancel</span>
+                <span>Annuler</span>
               </Button>
               <Button variant="gradient" color="green" type="submit">
-                <span>Confirm</span>
+                <span>confirmer</span>
               </Button>
             </DialogFooter>
           </form>

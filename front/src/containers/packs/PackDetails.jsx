@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const PackDetails = () => {
+const PackDetaille = () => {
   return (
     <div className="w-full  flex gap-10 py-6 px-20 ">
 
@@ -53,4 +53,4 @@ const PackDetails = () => {
   );
 };
 
-export default PackDetails;
+export default PackDetaille;

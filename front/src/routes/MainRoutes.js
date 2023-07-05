@@ -43,7 +43,10 @@ const MainRoutes = () => {
         <div className=' overflow-auto h-fit' style={!user || ['/login', '/register'].includes(location.pathname) ? {} : { maxHeight: '97vh' }} >
           <Routes>
 
-            <Route index element={user ? <Dashboard /> : <LandingPage />}
+            <Route index element={
+              user ? <PrivetRoute permissions={['admin', 'finance']} > <Dashboard /></PrivetRoute> : <LandingPage />
+
+            }
             />
 
             <Route path='login' element={

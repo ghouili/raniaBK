@@ -158,26 +158,26 @@ const Pointvente = () => {
         console.log(result);
         if (result.success) {
   
-          swal("Success!", result.message, "success");
+          swal("Succès!", result.message, "success");
           fetchData();
           closeModal();
         } else {
-          return swal("Error! ooo", result.message, "error");
+          return swal("Erreur! ooo", result.message, "error");
   
         }
       } catch (error) {
-        return swal("Error!", "errorr ", "erroreeefff");
+        return swal("Erreur!", "errorr ", "erroreeefff");
       }
     }
   
-    const deletepdv = async (id) => {
+    const Supprimerpdv = async (id) => {
       const result = await axios.delete(`http://localhost:5000/pdv/${id}`);
   
       if (result.data.success) {
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         fetchData();
       } else {
-        return swal("Error!", result.data.message, "error ohh");
+        return swal("Erreur!", result.data.message, "error ohh");
   
       }
   
@@ -199,7 +199,7 @@ const Pointvente = () => {
               onClick={() => setOpenModal(true)}
             >
               <span className="relative px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
-                Add pdv
+                Ajouter pdv
               </span>
             </button>
           </div>
@@ -246,11 +246,11 @@ const Pointvente = () => {
                   <button
                     type="button"
                     className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
-                    onClick={()=>deletepdv(_id)}
+                    onClick={()=>Supprimerpdv(_id)}
                   >
                     <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                       <IoTrashOutline />
-                      Delete
+                      Supprimer
                     </span>
                   </button>
                 </div>
@@ -406,7 +406,7 @@ const Pointvente = () => {
                 <button type="button"
                   className="text-white bg-gradient-to-r from-red-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-red-200 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                   onClick={() => closeModal()}
-                >Cancel</button>
+                >Annuler</button>
   
                 <button type="submit" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">submit</button>
   

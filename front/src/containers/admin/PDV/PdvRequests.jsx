@@ -79,26 +79,26 @@ const PdvRequests = () => {
     const senderName = "KHALLASLI";
     const message = `${
       lock
-        ? "Congratulations! Your Request have been approved to become a Point de Vent for Khallasli."
-        : "Unfortunately! You Request have been Declined to become a Point de Vent for Khallasli."
+        ? "Toutes nos félicitations! Votre demande a été approuvée pour devenir un Point de Vent chez Khallasli."
+        : "Malheureusement! Votre demande a été refusée pour devenir un Point de Vent chez Khallasli."
     }`;
 
-    const willDelete = await swal({
-      title: "Are you sure?",
-      text: `Are you sure that you want to ${
+    const willSupprimer = await swal({
+      title: "Êtes-vous sûr?",
+      text: `Êtes-vous sûr de vouloir ${
         lock ? "Accept" : "Decline"
       } this PDV?`,
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.post(`http://localhost:5001/lock/${id}`, {
         lock,
       });
 
       if (result.data.success) {
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
 
         const url = `${smsAPIUrl}?action=send-sms&api_key=${apiKey}&to=${recipientNumber}&from=
         ${senderName}&sms=${encodeURIComponent(message)}`;
@@ -117,7 +117,7 @@ const PdvRequests = () => {
 
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
@@ -142,7 +142,7 @@ const PdvRequests = () => {
           <div className="relative flex w-full max-w-[24rem]">
             <Input
               type="search"
-              label="Search users.."
+              label="Recherche users.."
               value={search}
               onChange={(e) => searchFilter(e.target.value)}
               className="pr-20 border-customColor"
@@ -154,14 +154,14 @@ const PdvRequests = () => {
               size="sm"
               className="!absolute right-1 top-1 rounded bg-customColor"
             >
-              Search
+              Recherche
             </Button>
           </div>
         </div>
       </div>
       {filterData?.length === 0 ? (
         <div className="w-full h-96 flex items-center justify-center">
-          <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+          <h1 className="text-4xl text-gray-700 font-bold">il n'y a pas de données à afficher </h1>
         </div>
       ) : (
         <div className="mt-10 w-full grid grid-cols-1 sm:grid-cols-2  gap-4">
@@ -266,7 +266,7 @@ const PdvRequests = () => {
                       >
                         <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                           <BsPersonCheck size={18} />
-                          <span>Accept</span>
+                          <span>Accepter</span>
                         </span>
                       </button>
                       <button
@@ -276,7 +276,7 @@ const PdvRequests = () => {
                       >
                         <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                           <BsPersonDash size={18} />
-                          <span>Decline</span>
+                          <span>Déverrouille</span>
                         </span>
                       </button>
                     </div>

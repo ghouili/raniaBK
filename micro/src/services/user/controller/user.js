@@ -215,18 +215,9 @@ const Add = async (req, res) => {
         return res.status(500).json({ success: false, message: 'internal server error', data: error });
     }
 
-    var transporter = nodemailer.createTransport({
-        // host: "smtp.mailtrap.io",
-        service: "gmail",
-        // port: 2525,
-        auth: {
-            user: "sebntn.contact@gmail.com",
-            pass: "joucivcesyymsnjd"
-        }
-    });
 
     let info = await transporter.sendMail({
-        from: 'sebntn.contact@gmail.com', // sender address
+        from: 'khallasli.contact@gmail.com', // sender address
         to: email, // list of receivers
         subject: "New Account Created", // Subject line
         // text: "Hello world?", // plain text body
@@ -447,7 +438,7 @@ const Add_PDV = async (req, res) => {
     const recipientNumber = telString.startsWith("216")
         ? telString
         : `216${telString}`;
-    const message = `Mr(s) ${name}, your Request to become a PDV has been successfully submitted. Here is your password: ${password}. Please keep it in a safe place, You can change your password anytime by logging into your account after .`;
+    const message = `Mr(s) ${name}, votre demande pour devenir un PDV a été soumise avec succès. Voici votre mot de passe : ${password}. Veuillez le conserver en lieu sûr. Vous pouvez modifier votre mot de passe à tout moment en vous connectant à votre compte.`;
 
     const url = `${smsAPIUrl}?action=send-sms&api_key=${apiKey}&to=${recipientNumber}&from=
         ${senderName}&sms=${encodeURIComponent(message)}`;
@@ -468,18 +459,18 @@ const Add_PDV = async (req, res) => {
         subject: "New Account Created", // Subject line
         // text: "Hello world?", // plain text body
         html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f5f5f5;">
-        <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; padding: 20px;">
-            <h1 style="text-align: center; color: #3d3d3d; margin-bottom: 40px;">Welcome to Our App!</h1>
-            <p style="font-size: 18px; color: #3d3d3d;">Dear ${name},</p>
-            <p style="font-size: 18px; color: #3d3d3d;">Your new account has been successfully created in our App as a(n) <strong>${role}</strong>.</p>
-            <p style="font-size: 18px; color: #3d3d3d;">Please keep your password in a safe place. You can change your password anytime by logging into your account.</p>
-            <p style="font-size: 18px; color: #3d3d3d;">Here is your password: <strong>${password}</strong></p>
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="http://localhost:3000/" style="display: inline-block; background-color: #0066ff; color: white; font-size: 18px; padding: 12px 30px; text-decoration: none; border-radius: 30px;">Check out our App</a>
-            </div>
-            <p style="font-size: 16px; color: #666; margin-top: 40px;">Thank you for using our App!</p>
-        </div>
+        <div style="font-family : Arial, sans empattement ; rembourrage : 20 px ; couleur d'arrière-plan : #f5f5f5 ;">
+         <div style="max-width : 600px ; margin : 0 auto ; background-color : blanc ; border-radius : 10px ; rembourrage : 20px ;">
+             <h1 style="text-align: center; color: #3d3d3d; margin-bottom: 40px;">Bienvenue sur notre application !</h1>
+             <p style="font-size : 18px ; couleur : #3d3d3d ;">Cher ${name},</p>
+             <p style="font-size: 18px; color: #3d3d3d;">Votre nouveau compte a été créé avec succès dans notre application en tant que(s) <strong>${role}</strong>.</p>
+             <p style="font-size: 18px; color: #3d3d3d;">Veuillez conserver votre mot de passe en lieu sûr. Vous pouvez modifier votre mot de passe à tout moment en vous connectant à votre compte.</p>
+             <p style="font-size: 18px; color: #3d3d3d;">Voici votre mot de passe : <strong>${password}</strong></p>
+             <div style="text-align : center ; margin-top : 40px ;">
+                 <a href="http://localhost:3000/" style="display: inline-block; background-color: #0066ff; color: white; font-size: 18px; padding: 12px 30px; text-decoration: none ; border-radius : 30px ;">Découvrez notre application</a>
+             </div>
+             <p style="font-size : 16px ; color : #666 ; margin-top : 40px ;">Merci d'utiliser notre application !</p>
+         </div>
     </div>
         `, // html body
     });

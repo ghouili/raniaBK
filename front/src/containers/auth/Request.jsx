@@ -177,16 +177,16 @@ const Request = () => {
 
       console.log(result);
       if (result.data.success === true) {
-        swal("Success!", "request was sent successfully", "success");
+        swal("Succès!", "request was sent successfully", "success");
         return navigate("/");
       } else {
-        return swal("Error!", result.data.message, "error");
+        return swal("Erreur!", result.data.message, "error");
       }
     } catch (error) {
       console.error(error);
-      return swal(
-        "Error!",
-        "Something went wrong. Please try again later.",
+      return       swal(
+        "Erreur!",
+        "Veuillez réessayer plus tard.",
         "error"
       );
     }
@@ -215,7 +215,7 @@ const Request = () => {
                     variant="h6"
                     color={activeStep === 0 ? "blue" : "blue-gray"}
                   >
-                    Personal Details
+                    Personal Detaille
                   </Typography>
                 </div>
               </Step>
@@ -226,7 +226,7 @@ const Request = () => {
                     variant="h6"
                     color={activeStep === 1 ? "blue" : "blue-gray"}
                   >
-                    Business Details
+                    Business Detaille
                   </Typography>
                 </div>
               </Step>
@@ -480,9 +480,9 @@ const Request = () => {
                   />
                   <InputField
                     type="number"
-                    label="Phone Number:"
+                    label="Telephone:"
                     name="tel"
-                    placeholder="PDV phone number"
+                    placeholder="PDV Telephone"
                     value={formValues.tel}
                     onChange={handleInputChange}
                   />

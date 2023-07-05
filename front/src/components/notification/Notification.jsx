@@ -33,7 +33,7 @@ const Notification = () => {
           <span className="sr-only">Info</span>
           <div>
             <span className="font-medium">
-              {alertData?.success ? "Success!" : "Declined"}
+              {alertData?.success ? "Succès!" : "Declined"}
             </span>{" "}
             {alertData?.msg}
           </div>

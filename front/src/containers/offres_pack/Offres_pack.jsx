@@ -34,7 +34,7 @@ import InputField from "../../components/inputField/InputField";
 import { path } from "../../utils/Variables";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-const TABLE_HEAD = ["Picture", "Title", "Description", "Montant", "Pack", ""];
+const TABLE_HEAD = ["Image", "Titre", "Description", "Montant", "Pack", ""];
 
 const Offres_pack = () => {
   const cookies = new Cookies();
@@ -139,7 +139,7 @@ const Offres_pack = () => {
     });
   };
 
-  const Update_offre = ({
+  const Modifier_offre = ({
     _id,
     title,
     description,
@@ -195,36 +195,32 @@ const Offres_pack = () => {
       console.log(result);
       if (result.data.success === true) {
         fetchData();
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
       } else {
-        return swal("Error!", result.data.message, "error");
+        return swal("Erreur!", result.data.message, "error");
       }
     } catch (error) {
       console.error(error);
-      return swal(
-        "Error!",
-        "Something went wrong. Please try again later.",
-        "error"
-      );
+      return swal("Erreur!", "Veuillez réessayer plus tard.", "error");
     }
   };
 
-  const deletePack = async (id) => {
-    const willDelete = await swal({
-      title: "Are you sure?",
-      text: "Are you sure that you want to delete this Pack?",
+  const SupprimerPack = async (id) => {
+    const willSupprimer = await swal({
+      title: "Êtes-vous sûr?",
+      text: "Êtes-vous sûr de vouloir supprimer ce Credit?",
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.delete(`http://localhost:5000/offre/${id}`);
 
       if (result.data.success) {
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
@@ -252,7 +248,7 @@ const Offres_pack = () => {
           <div className="relative flex w-full max-w-[24rem]">
             <Input
               type="search"
-              label="Search Credits.."
+              label="Recherche Credits.."
               value={search}
               onChange={(e) => searchFilter(e.target.value)}
               className="pr-20 border-customColor"
@@ -264,24 +260,26 @@ const Offres_pack = () => {
               size="sm"
               className="!absolute right-1 top-1 rounded bg-customColor"
             >
-              Search
+              Recherche
             </Button>
           </div>
-          <button
-            type="button"
-            className="py-1.5 w-36 px-3 text-sm font-medium text-customColor focus:outline-none  
+          {user.role !== "admin" ? null : (
+            <button
+              type="button"
+              className="py-1.5 w-36 px-3 text-sm font-medium text-customColor focus:outline-none  
           rounded-lg border-2 border-customColor bg-gray-100 hover:bg-customColor hover:text-gray-100 focus:z-10 
           focus:ring-4 focus:ring-gray-200 "
-            onClick={handleOpen}
-          >
-            <span className="flex w-full justify-center">Add Credits</span>
-          </button>
+              onClick={handleOpen}
+            >
+              <span className="flex w-full justify-center">Ajouter Credit</span>
+            </button>
+          )}
         </div>
       </div>
 
       {filterData.length === 0 ? (
         <div className="w-full h-96 flex items-center justify-center">
-          <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+          <h1 className="text-4xl text-gray-700 font-bold">il n'y a pas de données à afficher </h1>
         </div>
       ) : (
         <table className="mt-4 w-full min-w-max table-auto text-left">
@@ -384,38 +382,40 @@ const Offres_pack = () => {
                           {packid.nom}
                         </Link>
                       </td>
-                      <td
-                        className={`max-w-md flex items-center gap-4 py-6  ${classes}`}
-                      >
-                        <Tooltip content="Edit User">
-                          <IconButton
-                            variant="text"
-                            color="blue-gray"
-                            onClick={() =>
-                              Update_offre({
-                                _id,
-                                title,
-                                description,
-                                montant_min,
-                                montant_max,
-                                packid,
-                                picture,
-                              })
-                            }
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip content="Edit User">
-                          <IconButton
-                            variant="text"
-                            color="red"
-                            onClick={() => deletePack(_id)}
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                      </td>
+                      {user.role !== "admin" ? null : (
+                        <td
+                          className={`max-w-md flex items-center gap-4 py-6  ${classes}`}
+                        >
+                          <Tooltip content="Modifier Credit">
+                            <IconButton
+                              variant="text"
+                              color="blue-gray"
+                              onClick={() =>
+                                Modifier_offre({
+                                  _id,
+                                  title,
+                                  description,
+                                  montant_min,
+                                  montant_max,
+                                  packid,
+                                  picture,
+                                })
+                              }
+                            >
+                              <PencilIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip content="Supprimer Credit">
+                            <IconButton
+                              variant="text"
+                              color="red"
+                              onClick={() => SupprimerPack(_id)}
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      )}
                     </tr>
                   );
                 }
@@ -425,7 +425,7 @@ const Offres_pack = () => {
       )}
       <Fragment>
         <Dialog size="lg" open={open} handler={ToggleDialog}>
-          <DialogHeader>Add a Pack Credit.</DialogHeader>
+          <DialogHeader>Modifier Credit {formValues.title}.</DialogHeader>
           <form
             onSubmit={handleSubmit}
             className="overflow-auto"
@@ -502,7 +502,7 @@ const Offres_pack = () => {
                 <div className="">
                   <label className="block mb-2 text-sm font-medium text-gray-900 ">
                     {" "}
-                    Select Pack :
+                    Selectionner Pack :
                   </label>
                   <Select
                     label="Select Pack"
@@ -524,7 +524,7 @@ const Offres_pack = () => {
                 </div>
                 <InputField
                   type="text"
-                  label="Title:"
+                  label="Titre:"
                   name="title"
                   placeholder="Title"
                   value={formValues.title}
@@ -549,7 +549,7 @@ const Offres_pack = () => {
                 />
                 <InputField
                   type="number"
-                  label="Max Amount:"
+                  label="montant maximum:"
                   name="montant_max"
                   placeholder="Maxixmum.."
                   value={formValues.montant_max}
@@ -564,10 +564,10 @@ const Offres_pack = () => {
                 onClick={ToggleDialog}
                 className="mr-1"
               >
-                <span>Cancel</span>
+                <span>Annuler</span>
               </Button>
               <Button variant="gradient" color="green" type="submit">
-                <span>Confirm</span>
+                <span>confirmer</span>
               </Button>
             </DialogFooter>
           </form>

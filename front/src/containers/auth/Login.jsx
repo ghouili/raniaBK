@@ -52,7 +52,7 @@ const Login = () => {
     e.preventDefault();
 
     if (errors.email || errors.password || email === "" || password === "") {
-      return swal("Error!", " Vérifier votre Connexion ", "error");
+      return swal("Erreur!", " Vérifier votre Connexion ", "error");
     }
 
     try {
@@ -70,22 +70,22 @@ const Login = () => {
           result.data.active?.toString() === "true" ||
           result.data.role === "admin"
         ) {
-          swal("Success!", result.message, "success");
+          swal("Succès!", result.message, "success");
           const jsconValue = JSON.stringify(result.data);
           cookies.set("user", jsconValue);
           cookies.set("jwt", result.token);
           setUser(result.data);
         } else {
-          swal("Error!", "Sorry! yourn't permitted to access", "error");
+          swal("Erreur!", "Sorry! yourn't permitted to access", "error");
         }
         return navigate("/");
       } else {
-        return swal("Error!", result.message, "error");
+        return swal("Erreur!", result.message, "error");
       }
     } catch (error) {
       console.log(error);
       return swal(
-        "Error!",
+        "Erreur!",
         "votre mot de passe ou votre email est inccorect ",
         "error"
       );

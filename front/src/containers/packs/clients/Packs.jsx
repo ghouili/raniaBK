@@ -83,7 +83,7 @@ const Packs = () => {
                     className="absolute right-4 bottom-4 text-blue-900 font-medium"
                   >
                     {" "}
-                    More Details
+                    More Detaille
                   </Link>
                 </div>
               </div>

@@ -34,7 +34,8 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 const Sidebar = () => {
   const cookies = new Cookies();
   let user = cookies.get("user");
-  const { sidebarOpen, alert, alertData, setAlert } = useContext(GeneralContext);
+  const { sidebarOpen, alert, alertData, setAlert } =
+    useContext(GeneralContext);
   const location = useLocation();
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -56,24 +57,29 @@ const Sidebar = () => {
           className={`${sidebarOpen ? "w-full h-auto" : "w-full h-auto"}`}
         />
       </Link>
-      <div className=" relative px-3 flex flex-col gap-3" style={{height: '75vh'}}>
-        {/* Dashboard::: */}
-        <Link
-          to="/"
-          className={`rounded-md flex flex-row items-center ${
-            sidebarOpen ? "" : "justify-center"
-          } px-3 py-2 gap-2 text-base font-semibold hover:text-gray-800 hover:bg-gray-200 ${
-            location.pathname === "/"
-              ? "text-gray-100 bg-customColor"
-              : "text-gray-800"
-          } `}
-        >
-          <TbLayoutDashboard size={26} />
-          <span className={` ${sidebarOpen ? "block" : "hidden"}`}>
-            Dashboard
-          </span>
-        </Link>
 
+      <div
+        className=" relative px-3 flex flex-col gap-3"
+        style={{ height: "75vh" }}
+      >
+        {/* Dashboard::: */}
+        {user?.role === "pdv" ? null : (
+          <Link
+            to="/"
+            className={`rounded-md flex flex-row items-center ${
+              sidebarOpen ? "" : "justify-center"
+            } px-3 py-2 gap-2 text-base font-semibold hover:text-gray-800 hover:bg-gray-200 ${
+              location.pathname === "/"
+                ? "text-gray-100 bg-customColor"
+                : "text-gray-800"
+            } `}
+          >
+            <TbLayoutDashboard size={26} />
+            <span className={` ${sidebarOpen ? "block" : "hidden"}`}>
+              Dashboard
+            </span>
+          </Link>
+        )}
         {/* user::: */}
         {user?.role === "admin" ? (
           <Link
@@ -198,8 +204,9 @@ const Sidebar = () => {
           </span>
         </Link>
         {/* Simulation::: */}
-        <button
-          onClick={handleOpenDialog}
+        <Link
+          to="/simulateur"
+          // onClick={handleOpenDialog}
           className={`rounded-md  text-gray-800 flex flex-row items-center ${
             sidebarOpen ? "" : "justify-center"
           } px-3 py-2 gap-2 text-base font-semibold  hover:text-gray-800 hover:bg-gray-200 
@@ -210,7 +217,7 @@ const Sidebar = () => {
           <span className={` ${sidebarOpen ? "block" : "hidden"}`}>
             Simulateur
           </span>
-        </button>
+        </Link>
 
         <Fragment>
           <Dialog open={openDialog} handler={handleOpenDialog}>
@@ -338,7 +345,7 @@ const Sidebar = () => {
                 onClick={handleOpenDialog}
                 className="mr-1"
               >
-                <span>Cancel</span>
+                <span>Annuler</span>
               </Button>
               <Button
                 variant="gradient"

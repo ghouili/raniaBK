@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const Router = require('./router/credit');
 
@@ -11,6 +12,8 @@ app.use(express.json());
 app.use(cors({
     origin: '*'
 }));
+
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 app.use(express.json());
 app.use('/', Router);

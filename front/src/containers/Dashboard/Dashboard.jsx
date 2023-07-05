@@ -42,7 +42,7 @@ const Dashboard = () => {
             <h1 className="text-end font-medium text-gray-700"> {data.pdv}</h1>
           </div>
           <div className="bg-white rounded-md shadow-md p-6">
-            <h1 className="text-xl text-gray-800 font-semibold"> Financers</h1>
+            <h1 className="text-xl text-gray-800 font-semibold"> Micro-Finances</h1>
             <h1 className="text-end font-medium text-gray-700">
               {" "}
               {data.finance}
@@ -56,7 +56,7 @@ const Dashboard = () => {
             </h1>
           </div>
           <div className="bg-white rounded-md shadow-md p-6">
-            <h1 className="text-xl text-gray-800 font-semibold"> service</h1>
+            <h1 className="text-xl text-gray-800 font-semibold"> services</h1>
             <h1 className="text-end font-medium text-gray-700">
               {" "}
               {data.service}

@@ -147,17 +147,13 @@ const Profile = () => {
       console.log(result);
       if (result.data.success === true) {
         fetchData();
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
       } else {
-        return swal("Error!", result.data.message, "error");
+        return swal("Erreur!", result.data.message, "error");
       }
     } catch (error) {
       console.error(error);
-      return swal(
-        "Error!",
-        "Something went wrong. Please try again later.",
-        "error"
-      );
+      return swal("Erreur!", "Veuillez réessayer plus tard.", "error");
     }
   };
 
@@ -198,33 +194,36 @@ const Profile = () => {
               <CiLocationOn color="#17491B" size={24} />
               {user.adress}, {user.ville}
             </p>
+            {user?.role !== "pdv" ? null : (
+              <>
+                <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
 
-            <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
-
-            <div className="w-full flex flex-col gap-2 pt-4">
-              {/* <div className="w-full flex justify-center gap-4 items-center text-xl font-semibold text-blue-950">
+                <div className="w-full flex flex-col gap-2 pt-4">
+                  {/* <div className="w-full flex justify-center gap-4 items-center text-xl font-semibold text-blue-950">
                 <h2>user.register_comm</h2>
               </div> */}
-              <div className="w-full flex  items-center  text-gray-700 gap-4">
-                <GiDiploma size={22} />
-                <h2>{user.register_comm}</h2>
-              </div>
-              <div className="w-full flex  items-center  text-gray-700 gap-4">
-                <BsShop size={20} />
-                <h2>{user.shop_name}</h2>
-              </div>
-              <div className="w-full flex  items-center  text-gray-700 gap-4">
-                <RxSection size={20} />
-                <h2>{user.secter}</h2>
-              </div>
-            </div>
+                  <div className="w-full flex  items-center  text-gray-700 gap-4">
+                    <GiDiploma size={22} />
+                    <h2>{user.register_comm}</h2>
+                  </div>
+                  <div className="w-full flex  items-center  text-gray-700 gap-4">
+                    <BsShop size={20} />
+                    <h2>{user.shop_name}</h2>
+                  </div>
+                  <div className="w-full flex  items-center  text-gray-700 gap-4">
+                    <RxSection size={20} />
+                    <h2>{user.secter}</h2>
+                  </div>
+                </div>
+              </>
+            )}
             {/* Buttons */}
             <div className="pt-12 pb-8">
               <button
                 onClick={ToggleDialog}
                 className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full"
               >
-                Update
+                Modifier
               </button>
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full ml-4"
@@ -242,7 +241,7 @@ const Profile = () => {
       </div>
       <Fragment>
         <Dialog open={open} size="xl" handler={ToggleDialog}>
-          <DialogHeader>Add an Admin.</DialogHeader>
+          <DialogHeader>Ajouter an Admin.</DialogHeader>
           <form onSubmit={handleSubmit}>
             <DialogBody divider>
               <div className="overflow-y-auto" style={{ maxHeight: "68vh" }}>
@@ -319,18 +318,18 @@ const Profile = () => {
                 <div className="grid grid-cols-2 gap-4 pb-4">
                   <InputField
                     type="text"
-                    label="Name:"
+                    label="Nom:"
                     name="name"
-                    placeholder="PDV Name"
+                    placeholder="Nom de PDV"
                     value={user.name}
                     onChange={handleInputChange}
                   />
 
                   <InputField
                     type="number"
-                    label="Phone Number:"
+                    label="Telephone:"
                     name="tel"
-                    placeholder="PDV phone number"
+                    placeholder="PDV Telephone"
                     value={user.tel}
                     onChange={handleInputChange}
                   />
@@ -352,17 +351,17 @@ const Profile = () => {
                   />
                   <InputField
                     type="password"
-                    label="Password:"
+                    label="Mot de Passe:"
                     name="newPass"
-                    placeholder="Password"
+                    placeholder="Mot de Passe"
                     value={user?.newPass}
                     onChange={handleInputChange}
                   />
                   <InputField
                     type="password"
-                    label="Confirm Password:"
+                    label="Confirmer Mot de Passe:"
                     name="confirmPass"
-                    placeholder="Confirm Password"
+                    placeholder="Confirmer Mot de Passe"
                     value={user?.confirmPass}
                     onChange={handleInputChange}
                   />
@@ -376,10 +375,10 @@ const Profile = () => {
                 onClick={ToggleDialog}
                 className="mr-1"
               >
-                <span>Cancel</span>
+                <span>Annuler</span>
               </Button>
               <Button variant="gradient" color="green" type="submit">
-                <span>Confirm</span>
+                <span>confirmer</span>
               </Button>
             </DialogFooter>
           </form>

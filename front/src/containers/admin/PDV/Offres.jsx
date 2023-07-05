@@ -424,7 +424,7 @@ const Offres = () => {
                   onClick={handleOpenDialog}
                   className="mr-1"
                 >
-                  <span>Cancel</span>
+                  <span>Annuler</span>
                 </Button>
                 <Button
                   variant="gradient"

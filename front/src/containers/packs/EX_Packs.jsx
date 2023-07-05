@@ -83,7 +83,7 @@ const Packs = () => {
     setOpenModal(false);
   }
 
-  const update = (item) => {
+  const Modifier = (item) => {
     setNom(item.nom);
     setDescription(item.description);
     setMontant_min(item.montant_min);
@@ -144,26 +144,26 @@ const Packs = () => {
       console.log(result);
       if (result.success) {
 
-        swal("Success!", result.message, "success");
+        swal("Succès!", result.message, "success");
         fetchData();
         closeModal();
       } else {
-        return swal("Error!", result.message, "error");
+        return swal("Erreur!", result.message, "error");
 
       }
     } catch (error) {
-      return swal("Error!", "errorr ", "error");
+      return swal("Erreur!", "errorr ", "error");
     }
   }
 
-  const deletepack = async (id) => {
+  const Supprimerpack = async (id) => {
     const result = await axios.delete(`http://localhost:5000/service/${id}`);
 
     if (result.data.success) {
-      swal("Success!", result.data.message, "success");
+      swal("Succès!", result.data.message, "success");
       fetchData();
     } else {
-      return swal("Error!", result.data.message, "error ");
+      return swal("Erreur!", result.data.message, "error ");
 
     }
 
@@ -185,7 +185,7 @@ const Packs = () => {
             onClick={() => setOpenModal(true)}
           >
             <span className="relative px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
-              Add Packs
+              Ajouter Packs
             </span>
           </button>
         </div>
@@ -214,11 +214,11 @@ const Packs = () => {
                 <button
                   type="button"
                   className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
-                  onClick={() => update({ _id, description, nom , montant_min , montant_max ,critere_eligibility ,delai_traitement ,document_requis})}
+                  onClick={() => Modifier({ _id, description, nom , montant_min , montant_max ,critere_eligibility ,delai_traitement ,document_requis})}
                 >
                   <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                     <BsPencilSquare />
-                    Update
+                    Modifier
                   </span>
                 </button>
                 <Link to='/offres'
@@ -234,11 +234,11 @@ const Packs = () => {
                 <button
                   type="button"
                   className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
-                  onClick={()=>deletepack(_id)}
+                  onClick={()=>Supprimerpack(_id)}
                 >
                   <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                     <IoTrashOutline />
-                    Delete
+                    Supprimer
                   </span>
                 </button>
               </div>
@@ -388,7 +388,7 @@ const Packs = () => {
               <button type="button"
                 className="text-white bg-gradient-to-r from-red-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-red-200 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                 onClick={() => closeModal()}
-              >Cancel</button>
+              >Annuler</button>
 
               <button type="submit" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">submit</button>
 

@@ -67,14 +67,38 @@ const Simulateur = () => {
     setBenefit(e.target.value);
   };
 
-  const handleCalculate = () => {
+  const handleCalculate = async () => {
     //const amount=setAmount.value;
-    const PMTV = PMT(benefit / 12, repayment - grace, -1 * amount);
+    // const PMTV = PMT(benefit / 12, repayment - grace, -1 * amount);
+    const PMTV = await  handleCalculate2(amount, benefit, repayment, grace, refund);
 
+    setTotal(PMTV);
+    // if (refund) {
+    //   setTotal(Math.round(PMTV));
+    // } else {
+    //   setTotal(Math.round(PMTV * 3));
+    // }
+  };
+
+  const handleCalculate2 = async (montant, interet, duree, grasse, refund) => {
+    let montFrais = parseInt(montant);
+
+    interet = (montFrais * parseFloat(interet)) / 100;
+    let time = parseInt(duree) - parseInt(grasse);
+
+    console.log("montFrais: " + montFrais);
+    console.log("interet: " + interet);
+    console.log("time: " + time);
+
+    const echeance = (montFrais + interet) / time;
+    console.log("echeance: " + echeance);
+    // return echeance;
+    const roundedEcheance = Math.round(echeance);
+    // console.log(echeance);
     if (refund) {
-      setTotal(Math.round(PMTV));
+      return roundedEcheance;
     } else {
-      setTotal(Math.round(PMTV * 3));
+      return roundedEcheance * 3;
     }
   };
 
@@ -150,8 +174,8 @@ const Simulateur = () => {
                 name="benefit-range"
                 value={benefit}
                 onChange={handleBenefitRangeChange}
-                min="0.0025"
-                max="0,3"
+                // min="0.0025"
+                // max="0,3"
                 step="1"
                 className="mt-4"
               />

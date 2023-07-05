@@ -263,53 +263,53 @@ const NCredit = () => {
       // console.log(result);
       if (result.data.success === true) {
         fetchData();
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
       } else {
-        return swal("Error!", result.data.message, "error");
+        return swal("Erreur!", result.data.message, "error");
       }
     } catch (error) {
       console.error(error);
-      return swal(
-        "Error!",
-        "Something went wrong. Please try again later.",
+      return       swal(
+        "Erreur!",
+        "Veuillez réessayer plus tard.",
         "error"
       );
     }
   };
 
   const Refuse = async (id) => {
-    const willDelete = await swal({
+    const willSupprimer = await swal({
       title: "Are you sure?",
       text: "Are you sure that you want to Refuse this credit?",
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.put(
         `http://localhost:5004/etat/${id}`,
         { etat: "Refusee" }
       );
 
       if (result.data.success) {
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
 
   const Accept = async (e) => {
     e.preventDefault();
-    const willDelete = await swal({
+    const willSupprimer = await swal({
       title: "Are you sure?",
       text: "Are you sure that you want to Refuse this credit?",
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       // await handleCalculate();
       let echeance = await handleCalculate();
       // console.log({
@@ -338,12 +338,12 @@ const NCredit = () => {
             data: "Congratulation your Credit was accepted!!",
           });
         }
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         setAutre(120);
         setFraisDoc(7);
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
@@ -450,7 +450,7 @@ const NCredit = () => {
         <CardBody className="overflow-scroll px-0">
           {filterData?.length === 0 ? (
             <div className="w-full h-96 flex items-center justify-center">
-              <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+              <h1 className="text-4xl text-gray-700 font-bold">il n'y a pas de données à afficher </h1>
             </div>
           ) : (
             <table className="mt-4 w-full min-w-max table-auto text-left">
@@ -581,7 +581,7 @@ const NCredit = () => {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Tooltip content="Details Credit">
+                            <Tooltip content="Detaille Credit">
                               <IconButton
                                 variant="text"
                                 color="blue"
@@ -779,10 +779,10 @@ const NCredit = () => {
                 onClick={handleOpen}
                 className="mr-1"
               >
-                <span>Cancel</span>
+                <span>Annuler</span>
               </Button>
               <Button variant="gradient" color="green" type="submit">
-                <span>Confirm</span>
+                <span>confirmer</span>
               </Button>
             </DialogFooter>
           </form>

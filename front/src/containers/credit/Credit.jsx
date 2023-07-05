@@ -46,8 +46,8 @@ import { RxSection } from "react-icons/rx";
 
 const TABS = [
   {
-    label: "All",
-    value: "All",
+    label: "Tout",
+    value: "Tout",
   },
   {
     label: "EnCours",
@@ -91,7 +91,7 @@ const Credit = () => {
     duree: 0,
     grasse: 0,
     montant_ech: 0,
-    rembource: "Mensuelle",
+    rembource: "Mensuel",
     etat: "Acceptee",
   });
 
@@ -99,7 +99,7 @@ const Credit = () => {
     montant: 0,
     duree: 0,
     grasse: 0,
-    rembource: "Mensuelle",
+    rembource: "Mensuel",
     packid: "",
     offreid: "",
     userid: user?._id,
@@ -167,7 +167,7 @@ const Credit = () => {
       montant_ech: 0,
       duree: 0,
       grasse: 0,
-      rembource: "Mensuelle",
+      rembource: "Mensuel",
       date: "",
       packid: "",
       offreid: "",
@@ -176,7 +176,7 @@ const Credit = () => {
   };
 
   const searchFilter = (text) => {
-    if (text === "All") {
+    if (text === "Tout") {
       setfilterData(masterData);
       setSearch(text);
       return;
@@ -310,29 +310,25 @@ const Credit = () => {
       // console.log(result);
       if (result.data.success === true) {
         fetchData();
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
       } else {
-        return swal("Error!", result.data.message, "error");
+        return swal("Erreur!", result.data.message, "error");
       }
     } catch (error) {
       console.error(error);
-      return swal(
-        "Error!",
-        "Something went wrong. Please try again later.",
-        "error"
-      );
+      return swal("Erreur!", "Veuillez réessayer plus tard.", "error");
     }
   };
 
   const Refuse = async (id) => {
-    const willDelete = await swal({
+    const willSupprimer = await swal({
       title: "Are you sure?",
       text: "Are you sure that you want to Refuse this credit?",
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.put(`http://localhost:5004/etat/${id}`, {
         etat: "Refusee",
       });
@@ -344,28 +340,28 @@ const Credit = () => {
             userID: result.data.socketID,
             data: {
               success: false,
-              msg: "Unfortenatl Your credit was declined.",
+              msg: "Desole, Votre demande n'a pas acceptee .",
             },
           });
         }
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
 
   const Accept = async (e) => {
     e.preventDefault();
-    const willDelete = await swal({
+    const willSupprimer = await swal({
       title: "Are you sure?",
       text: "Are you sure that you want to Refuse this credit?",
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.put(
         `http://localhost:5004/etat/${credit._id}`,
         {
@@ -384,16 +380,16 @@ const Credit = () => {
             userID: result.data.socketID,
             data: {
               success: true,
-              msg: "Congratulation your Credit was accepted.",
+              msg: "Felicitation, Votre demande a été accepte.",
             },
           });
         }
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         setAutre(7);
         setFraisDoc(120);
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
@@ -426,7 +422,7 @@ const Credit = () => {
 
     const roundedEcheance = Math.round(echeance);
     console.log(echeance);
-    if (rembource === "Mensuelle") {
+    if (rembource === "Mensuel") {
       return roundedEcheance;
     } else {
       return roundedEcheance * 3;
@@ -440,10 +436,7 @@ const Credit = () => {
           <div className="mb-8 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
-                Members list
-              </Typography>
-              <Typography color="gray" className="mt-1 font-normal">
-                See information about all members
+                Liste des Credits
               </Typography>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -453,20 +446,22 @@ const Credit = () => {
                 size="sm"
                 onClick={() => searchFilter("")}
               >
-                view all
+                Tout
               </Button>
-              <Button
-                className="flex items-center gap-3"
-                color="green"
-                size="sm"
-                onClick={handleOpen}
-              >
-                <BsFileEarmarkPlus className="h-4 w-4" /> Demande Credit
-              </Button>
+              {user.role !== "pdv" ? null : (
+                <Button
+                  className="flex items-center gap-3"
+                  color="green"
+                  size="sm"
+                  onClick={handleOpen}
+                >
+                  <BsFileEarmarkPlus className="h-4 w-4" /> Demande Credit
+                </Button>
+              )}
             </div>
           </div>
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <Tabs value="All" className="w-full md:w-max">
+            <Tabs value="Tout" className="w-full md:w-max">
               <TabsHeader>
                 {TABS.map(({ label, value }) => (
                   <Tab
@@ -484,7 +479,7 @@ const Credit = () => {
             </Tabs>
             <div className="w-full md:w-72">
               <Input
-                label="Search"
+                label="Recherche"
                 value={search}
                 onChange={(e) => searchFilter(e.target.value)}
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
@@ -495,7 +490,7 @@ const Credit = () => {
         <CardBody className="overflow-scroll px-0">
           {filterData?.length === 0 ? (
             <div className="w-full h-96 flex items-center justify-center">
-              <h1 className="text-4xl text-gray-700 font-bold">No Data </h1>
+              <h1 className="text-4xl text-gray-700 font-bold">il n'y a pas de données à afficher </h1>
             </div>
           ) : (
             <table className="mt-4 w-full min-w-max table-auto text-left">
@@ -571,7 +566,7 @@ const Credit = () => {
                                 >
                                   {pack[0]?.nom}
                                 </Link>{" "}
-                                (<b>{montant}</b> DT) / <b>{montant_ech}</b> DT
+                                (<b>{montant}</b> DT)
                               </Typography>
                             </div>
                           </td>
@@ -616,7 +611,9 @@ const Credit = () => {
                                     ? "red"
                                     : "blue-gray"
                                 }
-                                value={etat}
+                                value={
+                                  etat === "Acceptee" ? "Accepté" : "Refusé"
+                                }
                                 // color="blue-gray"
                               />
                             </div>
@@ -631,7 +628,7 @@ const Credit = () => {
                             </Typography>
                           </td>
                           <td className={classes}>
-                            <Tooltip content="Details Credit">
+                            <Tooltip content="Detaille de Credit">
                               <IconButton
                                 variant="text"
                                 color="blue"
@@ -640,8 +637,9 @@ const Credit = () => {
                                 <EyeIcon className="h-5 w-5 text-green-900 " />
                               </IconButton>
                             </Tooltip>
-                            {etat === "Refusee" ? null : (
-                              <Tooltip content="Refuse Credit">
+                            
+                            {etat === "Refusee" || user.role !== "finance"  ? null : (
+                              <Tooltip content="Reffusé Credit">
                                 <IconButton
                                   variant="text"
                                   color="red"
@@ -651,8 +649,8 @@ const Credit = () => {
                                 </IconButton>
                               </Tooltip>
                             )}
-                            {etat === "Acceptee" ? null : (
-                              <Tooltip content="Accept Credit">
+                            {etat === "Acceptee" || user.role !== "finance"  ? null : (
+                              <Tooltip content="Accepté Credit">
                                 <IconButton
                                   variant="text"
                                   color="green"
@@ -671,7 +669,7 @@ const Credit = () => {
             </table>
           )}
         </CardBody>
-        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+        {/* <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Typography variant="small" color="blue-gray" className="font-normal">
             Page 1 of 10
           </Typography>
@@ -683,7 +681,7 @@ const Credit = () => {
               Next
             </Button>
           </div>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
 
       <Fragment>
@@ -792,7 +790,7 @@ const Credit = () => {
                 />
                 <InputField
                   type="number"
-                  label="Period de grasse par mois:"
+                  label="Period de grace par mois:"
                   name="grasse"
                   placeholder="Period de grasse par mois"
                   value={formValues.grasse}
@@ -816,8 +814,8 @@ const Credit = () => {
                     }}
                     label="Select Type De Rembourcement"
                   >
-                    <Option value="Mensuelle">Mensuelle</Option>
-                    <Option value="Trimestrielle">Trimestrielle</Option>
+                    <Option value="Mensuel">Mensuel</Option>
+                    <Option value="Trimestriel">Trimestriel</Option>
                   </Select>
                 </div>
               </div>
@@ -829,10 +827,10 @@ const Credit = () => {
                 onClick={handleOpen}
                 className="mr-1"
               >
-                <span>Cancel</span>
+                <span>Annuler</span>
               </Button>
               <Button variant="gradient" color="green" type="submit">
-                <span>Confirm</span>
+                <span>confirmer</span>
               </Button>
             </DialogFooter>
           </form>
@@ -843,8 +841,8 @@ const Credit = () => {
         <Dialog size="lg" open={openAccept} handler={handleOpenAccept}>
           <div className="flex items-center justify-between">
             <DialogHeader>
-              <span className="text-center text-sm font-medium">
-                Accept this Credit
+              <span className="text-center text-sm font-medium mr-4">
+                Traitement de credit
               </span>
               <span className="text-green-500 font-semibold">
                 {displayEcheance} Dt
@@ -862,7 +860,7 @@ const Credit = () => {
                   disabled
                 />
                 <Input
-                  label="Taux d'intret"
+                  label="Taux d'intret en %"
                   type="number"
                   value={credit.interet}
                   onChange={async (e) => {
@@ -900,7 +898,7 @@ const Credit = () => {
                   }}
                 />
                 <Input
-                  label="Frais de dossier"
+                  label="Frais de dossier en DT"
                   type="number"
                   value={fraisDoc}
                   onChange={async (e) => {
@@ -930,7 +928,7 @@ const Credit = () => {
                   }}
                 />
                 <Input
-                  label="Assurance"
+                  label="Assurance en %"
                   value={autre}
                   type="number"
                   onChange={async (e) => {
@@ -951,7 +949,7 @@ const Credit = () => {
                   }}
                 />
                 <Input
-                  label="Durree"
+                  label="Durrée (mois)"
                   value={credit.duree}
                   onChange={async (e) => {
                     setCredit({
@@ -974,7 +972,7 @@ const Credit = () => {
                   }}
                 />
                 <Input
-                  label="Period Grasse"
+                  label="Periode Grace (mois)"
                   value={credit.grasse}
                   onChange={async (e) => {
                     setCredit({
@@ -1000,10 +998,10 @@ const Credit = () => {
             </DialogBody>
             <DialogFooter className="space-x-2">
               <Button variant="outlined" color="red" onClick={handleOpenAccept}>
-                close
+                Annuler
               </Button>
               <Button variant="gradient" color="green" type="submit">
-                Accept
+                Accepté
               </Button>
             </DialogFooter>
           </form>
@@ -1149,7 +1147,7 @@ const Credit = () => {
           </div>
           {/* <DialogFooter className="space-x-2">
             <Button variant="outlined" color="red" onClick={handelPdvD}>
-              close
+              Annuler
             </Button>
           </DialogFooter> */}
         </Dialog>

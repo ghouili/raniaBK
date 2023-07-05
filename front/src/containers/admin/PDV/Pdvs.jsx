@@ -208,7 +208,7 @@ const Pdvs = () => {
     });
   };
 
-  const Update_User = (item) => {
+  const Modifier_User = (item) => {
     console.log(item);
     setFormValues(item);
     setOpen(true);
@@ -263,60 +263,60 @@ const Pdvs = () => {
       console.log(result);
       if (result.data.success === true) {
         fetchData();
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
       } else {
-        return swal("Error!", result.data.message, "error");
+        return swal("Erreur!", result.data.message, "error");
       }
     } catch (error) {
       console.error(error);
-      return swal(
-        "Error!",
-        "Something went wrong. Please try again later.",
+      return       swal(
+        "Erreur!",
+        "Veuillez réessayer plus tard.",
         "error"
       );
     }
   };
 
-  const deleteUser = async (id) => {
-    const willDelete = await swal({
-      title: "Are you sure?",
-      text: "Are you sure that you want to delete this Admin?",
+  const SupprimerUser = async (id) => {
+    const willSupprimer = await swal({
+          title: "Êtes-vous sûr?",
+      text: "Êtes-vous sûr de vouloir supprimer ce Admin?",
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.delete(`http://localhost:5000/user/${id}`);
 
       if (result.data.success) {
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
 
   const ToggleLock = async (lock, id) => {
-    const willDelete = await swal({
-      title: "Are you sure?",
-      text: `Are you sure that you want to ${
-        lock ? "UnLock" : "Lock"
-      } this PDV?`,
+    const willSupprimer = await swal({
+      title: "Êtes-vous sûr?",
+      text: `Êtes-vous sûr de vouloir ${
+        lock ? "Déverrouille" : "verrouille"
+      } ce PDV?`,
       icon: "warning",
       dangerMode: true,
     });
 
-    if (willDelete) {
+    if (willSupprimer) {
       const result = await axios.post(`http://localhost:5001/lock/${id}`, {
         lock,
       });
 
       if (result.data.success) {
-        swal("Success!", result.data.message, "success");
+        swal("Succès!", result.data.message, "success");
         fetchData();
       } else {
-        return swal("Error!", result.adta.message, "error");
+        return swal("Erreur!", result.adta.message, "error");
       }
     }
   };
@@ -341,7 +341,7 @@ const Pdvs = () => {
           <div className="relative flex w-full max-w-[24rem]">
             <Input
               type="search"
-              label="Search users.."
+              label="Recherche users.."
               value={search}
               onChange={(e) => searchFilter(e.target.value)}
               className="pr-20 border-customColor"
@@ -353,7 +353,7 @@ const Pdvs = () => {
               size="sm"
               className="!absolute right-1 top-1 rounded bg-customColor"
             >
-              Search
+              Recherche
             </Button>
           </div>
 
@@ -364,7 +364,7 @@ const Pdvs = () => {
             focus:ring-4 focus:ring-gray-200 "
             onClick={handleOpen}
           >
-            <span className="flex w-16 justify-center">Add User</span>
+            <span className="flex w-16 justify-center">Ajouter User</span>
           </button>
         </div>
       </div>
@@ -487,9 +487,9 @@ const Pdvs = () => {
                       <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                         {active === true ? <BsLock /> : <BsUnlock />}
                         {active === true ? (
-                          <span>Lock</span>
+                          <span>Verrouille</span>
                         ) : (
-                          <span>UnLock</span>
+                          <span>Déverrouille</span>
                         )}
 
                         {/* <BsPersonCheck />
@@ -502,7 +502,7 @@ const Pdvs = () => {
                       type="button"
                       className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white  focus:ring-4 focus:outline-none focus:ring-green-200 "
                       onClick={() =>
-                        Update_User({
+                        Modifier_User({
                           _id,
                           email,
                           name,
@@ -522,18 +522,18 @@ const Pdvs = () => {
                     >
                       <span className="relative flex items-center gap-1  px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                         <BsPencilSquare />
-                        Update
+                        Modifier
                       </span>
                     </button>
 
                     <button
                       type="button"
                       className="relative inline-flex items-center justify-center p-0.5  overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-red-500 group-hover:from-pink-500 group-hover:to-red-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 "
-                      onClick={() => deleteUser(_id)}
+                      onClick={() => SupprimerUser(_id)}
                     >
                       <span className="relative flex items-center gap-1 px-3 py-1.5 transition-all ease-in duration-75 bg-white  rounded-md group-hover:bg-opacity-0">
                         <IoTrashOutline />
-                        Delete
+                        Supprimer
                       </span>
                     </button>
                   </div>
@@ -545,7 +545,7 @@ const Pdvs = () => {
 
       <Fragment>
         <Dialog open={open} size="xl" handler={ToggleDialog}>
-          <DialogHeader>Add an Admin.</DialogHeader>
+          <DialogHeader>Ajouter PDV.</DialogHeader>
           <form onSubmit={handleSubmit}>
             <DialogBody divider>
               <div className="overflow-y-auto" style={{ maxHeight: "68vh" }}>
@@ -764,7 +764,7 @@ const Pdvs = () => {
                 <div className="grid grid-cols-2 gap-4 pb-4">
                   <InputField
                     type="text"
-                    label="Name:"
+                    label="Nom:"
                     name="name"
                     placeholder="PDV Name"
                     value={formValues.name}
@@ -780,9 +780,9 @@ const Pdvs = () => {
                   />
                   <InputField
                     type="number"
-                    label="Phone Number:"
+                    label="Telephone:"
                     name="tel"
-                    placeholder="PDV phone number"
+                    placeholder="PDV Telephone"
                     value={formValues.tel}
                     onChange={handleInputChange}
                   />
@@ -812,7 +812,7 @@ const Pdvs = () => {
                   />
                   <InputField
                     type="text"
-                    label="shop name:"
+                    label="Nom de Boutique:"
                     name="shop_name"
                     placeholder="PDV shop name"
                     value={formValues.shop_name}
@@ -820,7 +820,7 @@ const Pdvs = () => {
                   />
                   <InputField
                     type="text"
-                    label="Secter:"
+                    label="Secter d'activité:"
                     name="secter"
                     placeholder="PDV Secter"
                     value={formValues.secter}
@@ -836,10 +836,10 @@ const Pdvs = () => {
                 onClick={ToggleDialog}
                 className="mr-1"
               >
-                <span>Cancel</span>
+                <span>Annuler</span>
               </Button>
               <Button variant="gradient" color="green" type="submit">
-                <span>Confirm</span>
+                <span>confirmer</span>
               </Button>
             </DialogFooter>
           </form>

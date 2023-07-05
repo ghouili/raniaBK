@@ -11,7 +11,7 @@ import React, {
 // import { Link } from 'react-router-dom';
 
 import { BsSun, BsBell } from "react-icons/bs";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineRecherche } from "react-icons/ai";
 import { IoMdExpand } from "react-icons/io";
 import {
   TbSquareRoundedArrowLeft,
